@@ -20,27 +20,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="title Linux CC++编程总结二date 2022-07-08 17:41:09categories  Linux学习 基础知识tags Linux cc++   线程1.线程的创建与销毁：">
+    <meta name="description" content="TCP总结：1.TCP通信流程：TCP协议是TCP&#x2F;IP协议族中一个重要的协议。与IP协议相比，更接近于应用层。传输层协议主要有两个：TCP协议和UDP协议。UDP协议在此博客中不再介绍，而将要总结的TCP协议是一种面向连接、字节流的传输协议，支持一对一的可靠传输（通过确认应答和超时重传来实现可靠传输），TCP的通信流程为： 1.双方首先进行，需要为连接分配必要的内核资源，管理连接状态和">
 <meta property="og:type" content="article">
-<meta property="og:title" content="M1DSUMMER&#39;s BLOG">
-<meta property="og:url" content="https://midsummer02.github.io/2022/07/11/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/index.html">
+<meta property="og:title" content="TCP总结">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
-<meta property="og:description" content="title Linux CC++编程总结二date 2022-07-08 17:41:09categories  Linux学习 基础知识tags Linux cc++   线程1.线程的创建与销毁：">
+<meta property="og:description" content="TCP总结：1.TCP通信流程：TCP协议是TCP&#x2F;IP协议族中一个重要的协议。与IP协议相比，更接近于应用层。传输层协议主要有两个：TCP协议和UDP协议。UDP协议在此博客中不再介绍，而将要总结的TCP协议是一种面向连接、字节流的传输协议，支持一对一的可靠传输（通过确认应答和超时重传来实现可靠传输），TCP的通信流程为： 1.双方首先进行，需要为连接分配必要的内核资源，管理连接状态和">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-07-11T07:07:15.987Z">
-<meta property="article:modified_time" content="2022-07-12T09:42:07.761Z">
+<meta property="og:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/TCP%E6%80%BB%E7%BB%93%5C%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta property="article:published_time" content="2022-07-12T11:04:52.000Z">
+<meta property="article:modified_time" content="2022-07-12T11:06:26.423Z">
 <meta property="article:author" content="Sun">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/TCP%E6%80%BB%E7%BB%93%5C%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
 
 
-<link rel="canonical" href="https://midsummer02.github.io/2022/07/11/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/">
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/11/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/","path":"2022/07/11/LinuxCC++编程总结三/","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/","path":"2022/07/12/TCP总结/","title":"TCP总结"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title> | M1DSUMMER's BLOG</title>
+<title>TCP总结 | M1DSUMMER's BLOG</title>
   
 
 
@@ -178,7 +180,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/11/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -191,12 +193,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | M1DSUMMER's BLOG">
+      <meta itemprop="name" content="TCP总结 | M1DSUMMER's BLOG">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          TCP总结
         </h1>
 
         <div class="post-meta-container">
@@ -206,15 +208,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2022-07-11 15:07:15" itemprop="dateCreated datePublished" datetime="2022-07-11T15:07:15+08:00">2022-07-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-07-12 17:42:07" itemprop="dateModified" datetime="2022-07-12T17:42:07+08:00">2022-07-12</time>
+      <time title="创建时间：2022-07-12 19:04:52 / 修改时间：19:06:26" itemprop="dateCreated datePublished" datetime="2022-07-12T19:04:52+08:00">2022-07-12</time>
     </span>
 
   
@@ -227,15 +223,21 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <hr>
-<p>title Linux CC++编程总结二<br>date 2022-07-08 17:41:09<br>categories</p>
-<ul>
-<li>Linux学习</li>
-<li>基础知识<br>tags</li>
-<li>Linux cc++</li>
-</ul>
-<hr>
-<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><h3 id="1-线程的创建与销毁："><a href="#1-线程的创建与销毁：" class="headerlink" title="1.线程的创建与销毁："></a>1.线程的创建与销毁：</h3>
+        <h1 id="TCP总结："><a href="#TCP总结：" class="headerlink" title="TCP总结："></a>TCP总结：</h1><h2 id="1-TCP通信流程："><a href="#1-TCP通信流程：" class="headerlink" title="1.TCP通信流程："></a>1.TCP通信流程：</h2><p>TCP协议是TCP&#x2F;IP协议族中一个重要的协议。与IP协议相比，更接近于应用层。传输层协议主要有两个：TCP协议和UDP协议。UDP协议在此博客中不再介绍，而将要总结的TCP协议是一种面向连接、字节流的传输协议，支持一对一的可靠传输（通过确认应答和超时重传来实现可靠传输），TCP的通信流程为：</p>
+<p>1.双方首先进行，需要为连接分配必要的内核资源，管理连接状态和数据传输<br>2.双方读写都是通过同一个连接进行的<br>3.完成数据交换后，通信双方应该断开连接以释放系统资源</p>
+<h3 id="（1）三次握手建立连接："><a href="#（1）三次握手建立连接：" class="headerlink" title="（1）三次握手建立连接："></a>（1）三次握手建立连接：</h3><h4 id="过程："><a href="#过程：" class="headerlink" title="过程："></a>过程：</h4><p><img src="/2022/07/12/TCP%E6%80%BB%E7%BB%93/TCP%E6%80%BB%E7%BB%93%5C%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="三次握手"></p>
+<h4 id="三次握手原因："><a href="#三次握手原因：" class="headerlink" title="三次握手原因："></a>三次握手原因：</h4><ol>
+<li><p>三次握⼿可以阻⽌重复历史连接的初始化(主因) ：</p>
+<p>如果采用两次握手，在网络拥堵的情况下，客户端可能因为超时重传发送了两次TCP的连接请求。第二次发送的连接请求处理完毕并释放资源后，第一次发送的连接可能才请求被服务器接收，两次握手的情况下会重新建立已经完成的历史连接。而采用三次握手，客户端可以凭借上下文信息（序列号过期或超时）判断这是否为历史连接，防止建立之前已经完成的重复连接。</p>
+</li>
+<li><p>三次握⼿可以同步双⽅的初始序列号 </p>
+<p>TCP中序列号和确认应答机制保障了传输的可靠性，因此当第⼆次握⼿时服务端向客户端发送请求报⽂时，需要客户端返回确认报⽂才保障双⽅序列号被可靠同步。如果仅有两次握⼿，只保证了客户端序列号的可靠性。</p>
+</li>
+<li><p>三次握⼿可以避免资源浪费：</p>
+<p>没有第三次握⼿，服务器不清楚客户端是否收到了⾃⼰发送的建⽴连接的 ACK 确认信号，所以每收到⼀ 个 SYN 就只能先主动建⽴⼀个连接，造成资源浪费。</p>
+</li>
+</ol>
+<h3 id="（2）四次挥手释放连接："><a href="#（2）四次挥手释放连接：" class="headerlink" title="（2）四次挥手释放连接："></a>（2）四次挥手释放连接：</h3>
     </div>
 
     
@@ -248,14 +250,11 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/07/05/Linux%20CC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%BA%8C/" rel="prev" title="Linux C/C++编程总结二">
-                  <i class="fa fa-chevron-left"></i> Linux C/C++编程总结二
+                <a href="/2022/07/11/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/" rel="prev" title="">
+                  <i class="fa fa-chevron-left"></i> 
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/07/12/TCP%E6%80%BB%E7%BB%93/" rel="next" title="TCP总结">
-                  TCP总结 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
