@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Epoll：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IO复用技术——Epoll">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/31/IO%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF%E2%80%94%E2%80%94Epoll/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="Epoll：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-31T08:07:55.000Z">
+<meta property="article:modified_time" content="2022-08-10T08:37:30.483Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="Linux c&#x2F;c++">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="IO多路复用">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/31/IO%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF%E2%80%94%E2%80%94Epoll/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/31/IO%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF%E2%80%94%E2%80%94Epoll/","path":"2022/07/31/IO复用技术——Epoll/","title":"IO复用技术——Epoll"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>IO复用技术——Epoll | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/31/IO%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF%E2%80%94%E2%80%94Epoll/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="IO复用技术——Epoll | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IO复用技术——Epoll
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-31 16:07:55" itemprop="dateCreated datePublished" datetime="2022-07-31T16:07:55+08:00">2022-07-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-10 16:37:30" itemprop="dateModified" datetime="2022-08-10T16:37:30+08:00">2022-08-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Linux学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="Epoll："><a href="#Epoll：" class="headerlink" title="Epoll："></a>Epoll：</h3><span id="more"></span>
+
+<p>相比于select和poll只能返回被修改的文件描述符的数目，epoll还可以通知用户具体是哪些文件描述符发生的改变。</p>
+<h4 id="Epoll的底层原理："><a href="#Epoll的底层原理：" class="headerlink" title="Epoll的底层原理："></a>Epoll的底层原理：</h4><p>在内核区创建一个名为eventpoll的结构体，其中包含两个数据结构：分别是记录所有要监听的文件描述符的红黑树和记录所有发生的变化的文件描述符的双向链表，并返回文件描述符，使得我们可以通过该文件描述符对内核区的数据内容进行修改。</p>
+<h4 id="相关的函数操作："><a href="#相关的函数操作：" class="headerlink" title="相关的函数操作："></a>相关的函数操作：</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建eventpoll结构体</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span>;</span><br><span class="line"><span class="comment">//size : 原来使用哈希表实现，目前没有意义了。随便写一个数，必须大于0</span></span><br><span class="line"><span class="comment">//返回值：-1 : 失败 ; &gt; 0 : 文件描述符fd，该fd可以用来操作epoll实例</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对epoll实例进行管理：添加文件描述符信息，删除信息，修改信息</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	- epfd : epoll实例对应的文件描述符</span></span><br><span class="line"><span class="comment">	- op : 要进行的对应操作</span></span><br><span class="line"><span class="comment">        EPOLL_CTL_ADD: 添加</span></span><br><span class="line"><span class="comment">        EPOLL_CTL_MOD: 修改</span></span><br><span class="line"><span class="comment">        EPOLL_CTL_DEL: 删除</span></span><br><span class="line"><span class="comment">    - fd : 要检测的文件描述符</span></span><br><span class="line"><span class="comment">    - event : 检测文件描述符什么事情</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">//常见的Epoll检测事件：</span></span><br><span class="line"><span class="comment">//    - EPOLLIN - EPOLLOUT 代表有数据要读和写</span></span><br><span class="line"><span class="comment">//	  - EPOLLERR 代表读写时出现异常</span></span><br><span class="line"><span class="comment">//	  - EPOLLRDHUP 代表对方断开连接</span></span><br><span class="line"><span class="comment">//	  - EPOLLET  设置ET模式，只通知一次</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> &#123;</span></span><br><span class="line">	<span class="type">uint32_t</span> events;  <span class="comment">//Epoll events </span></span><br><span class="line">	<span class="type">epoll_data_t</span> data; <span class="comment">// User data variable </span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">union</span> <span class="title">epoll_data</span> &#123;</span></span><br><span class="line">	<span class="type">void</span> *ptr;</span><br><span class="line">	<span class="type">int</span> fd;</span><br><span class="line">	<span class="type">uint32_t</span> u32;</span><br><span class="line">	<span class="type">uint64_t</span> u64;</span><br><span class="line">&#125; <span class="type">epoll_data_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检测函数，可以选择是否阻塞</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_wait</span><span class="params">(<span class="type">int</span> epfd, <span class="keyword">struct</span> epoll_event *events, <span class="type">int</span> maxevents, <span class="type">int</span> timeout)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    - epfd : epoll实例对应的文件描述符</span></span><br><span class="line"><span class="comment">    - events : 传出参数，保存了发送了变化的文件描述符的信息</span></span><br><span class="line"><span class="comment">    - maxevents : 第二个参数结构体数组的大小</span></span><br><span class="line"><span class="comment">    - timeout : 阻塞时间</span></span><br><span class="line"><span class="comment">        - 0 : 不阻塞</span></span><br><span class="line"><span class="comment">        - -1 : 阻塞，直到检测到fd数据发生变化，解除阻塞</span></span><br><span class="line"><span class="comment">        - &gt; 0 : 阻塞的时长（毫秒）</span></span><br><span class="line"><span class="comment">    - 返回值：成功，返回发送变化的文件描述符的个数 &gt; 0 ; 失败 -1</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>epoll相比于select和poll，不需要将文件描述符列表进行复制，并且采用红黑树对其进行存储，使得遍历时间从原来的O(n) 优化到O(logN) ，并且通过双向链表存储发生变化的文件描述符，使得从内核返回数据后无需再次遍历（与操作对比）即可获得相应发生变化的文件描述符，可以直接处理相应事件。</p>
+<h4 id="epoll的回调机制："><a href="#epoll的回调机制：" class="headerlink" title="epoll的回调机制："></a>epoll的回调机制：</h4><p>在执行epoll_ctl的add操作时，不仅将文件描述符放到红黑树上，而且也注册了回调函数，内核在检测到某文件描述符可读&#x2F;可写时会调用回调函数，该回调函数将文件描述符放在就绪链表中。</p>
+<p>epoll_wait 是阻塞（超时）等待事件发生的接口，当内核检测到 fd 有事件发生，会唤醒进程，内核将 fd 对应事件从内核拷贝（__put_user）到用户空间处理。</p>
+<h4 id="Epoll的两种工作模式："><a href="#Epoll的两种工作模式：" class="headerlink" title="Epoll的两种工作模式："></a>Epoll的两种工作模式：</h4><p><strong>LT 模式 （水平触发）：即有数据一直通知</strong> </p>
+<p>假设委托内核检测读事件 -&gt; 检测fd的读缓冲区 </p>
+<p>读缓冲区有数据 - &gt; epoll检测到了会给用户通知 </p>
+<p>​		a.用户不读数据，数据一直在缓冲区，epoll 会一直通知 </p>
+<p>​		b.用户只读了一部分数据，epoll会通知 </p>
+<p>​		c.缓冲区的数据读完了，不通知</p>
+<p>LT（level - triggered）是缺省的工作方式，默认情况下使用该模式，并且同时支持 block 和 no-block socket。在这 种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的 fd 进行 IO 操 作。如果你不作任何操作，内核还是会继续通知你的。</p>
+<p><strong>ET 模式（边沿触发）：即只通知一次</strong> </p>
+<p>假设委托内核检测读事件 -&gt; 检测fd的读缓冲区 </p>
+<p>读缓冲区有数据 - &gt; epoll检测到了会给用户通知 </p>
+<p>​		a.用户不读数据，数据一致在缓冲区中，epoll下次检测的时候就不通知了 </p>
+<p>​		b.用户只读了一部分数据，epoll不通知 </p>
+<p>​		c.缓冲区的数据读完了，不通知</p>
+<p>ET（edge - triggered）是高速工作方式，只支持 no-block socket。（如果采用阻塞模式，例如read函数：由于ET模式下只通知一次，因此应该循环读入直至没有数据以防止漏读数据后不再通知，而read采用阻塞模式读完数据后会阻塞等待，导致ET模式无法继续通知）</p>
+<p>ET 模式在很大程度上减少了 epoll 事件被重复触发的次数，因此效率要比 LT 模式高。epoll 工作在 ET 模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读&#x2F;阻塞写 操作把处理多个文件描述符的任务饿死。</p>
+<h4 id="EPOLLONESHOT事件"><a href="#EPOLLONESHOT事件" class="headerlink" title="EPOLLONESHOT事件"></a>EPOLLONESHOT事件</h4><p>即使可以使用 ET 模式，一个socket 上的某个事件还是可能被触发多次。这在并发程序中就会引起一个问题。比如一个线程在读取完某个 socket 上的数据后开始处理这些数据，而在数据的处理过程中该 socket 上又有新数据可读（EPOLLIN 再次被触发），此时另外一个线程被唤醒来读取这些新的数据。于是就出现了两个线程同时操作一个 socket 的局面。</p>
+<p>若要保证一个socket连接在任一时刻都只被一个线程处理，可以使用 epoll 的 EPOLLONESHOT 事件实现。 对于注册了 EPOLLONESHOT 事件的文件描述符，操作系统最多触发其上注册的一个可读、可写或者异 常事件，<strong>且只触发一次</strong>，除非我们使用 epoll_ctl 函数重置该文件描述符上注册的 EPOLLONESHOT 事 件。这样，当一个线程在处理某个 socket 时，其他线程不会操作该 socket 。但另一方面，<strong>注册了 EPOLLONESHOT 事件的 socket 一旦被某个线程处理完毕， 该线程就应该立即重置这个 socket 上的 EPOLLONESHOT 事件，以确保这个 socket 下一次可读时，其 EPOLLIN 事件能被触发</strong>，进而让其他工作线程有机会继续处理这个 socket。</p>
+<h2 id="epoll更高效的原因"><a href="#epoll更高效的原因" class="headerlink" title="epoll更高效的原因"></a>epoll更高效的原因</h2><ol>
+<li>select和poll的动作基本一致，只是poll采用链表来进行文件描述符的存储，而select采用fd标注位来存放，所以select会受到最大连接数的限制，而poll不会。</li>
+<li>select、poll、epoll虽然都会返回就绪的文件描述符数量。但是select和poll并不会明确指出是哪些文件描述符就绪，而epoll会。造成的区别就是，系统调用返回后，调用select和poll的程序需要遍历监听的整个文件描述符找到是谁处于就绪，而epoll则直接处理即可。</li>
+<li>select、poll都需要将有关文件描述符的数据结构拷贝进内核，最后再拷贝出来。而epoll创建的有关文件描述符的数据结构本身就存于内核态中，系统调用返回时利用mmap()文件映射内存加速与内核空间的消息传递：即epoll使用mmap减少复制开销。</li>
+<li>select、poll采用轮询的方式来检查文件描述符是否处于就绪态，而epoll采用回调机制。造成的结果就是，随着fd的增加，select和poll的效率会线性降低，而epoll不会受到太大影响，除非活跃的socket很多。</li>
+<li>epoll的边缘触发模式效率高，系统不会充斥大量不关心的就绪文件描述符</li>
+</ol>
+<p>虽然epoll的性能最好，但是在连接数少并且连接都十分活跃的情况下，select和poll的性能可能比epoll好，毕竟epoll的通知机制需要很多函数回调。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux-c-c/" rel="tag"># Linux c/c++</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
+              <a href="/tags/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" rel="tag"># IO多路复用</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/31/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E5%8D%95%E4%BE%8B/" rel="prev" title="设计模式————单例">
+                  <i class="fa fa-chevron-left"></i> 设计模式————单例
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/31/IO%E6%A8%A1%E5%9E%8B/" rel="next" title="IO模型">
+                  IO模型 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

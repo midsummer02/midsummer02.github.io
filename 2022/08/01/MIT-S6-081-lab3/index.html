@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="MIT6 S-081-lab3：实验二中主要熟悉了系统调用的编写，实验三则是涉及到xv6系统的内存系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT6 S-081-lab3">
+<meta property="og:url" content="https://midsummer02.github.io/2022/08/01/MIT-S6-081-lab3/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="MIT6 S-081-lab3：实验二中主要熟悉了系统调用的编写，实验三则是涉及到xv6系统的内存系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://midsummer02.github.io/2022/08/01/MIT-S6-081-lab3/MIT-S6-081-lab3%5Cxv6%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0.png">
+<meta property="og:image" content="https://midsummer02.github.io/2022/08/01/MIT-S6-081-lab3/MIT-S6-081-lab3%5C%E6%A0%87%E5%BF%97%E4%BD%8D%E5%9C%A8%E9%A1%B5%E8%A1%A8%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE.png">
+<meta property="article:published_time" content="2022-08-01T07:33:11.000Z">
+<meta property="article:modified_time" content="2022-08-11T01:44:48.013Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="Linux c&#x2F;c++">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="MIT6.S081">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://midsummer02.github.io/2022/08/01/MIT-S6-081-lab3/MIT-S6-081-lab3%5Cxv6%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0.png">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/08/01/MIT-S6-081-lab3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/08/01/MIT-S6-081-lab3/","path":"2022/08/01/MIT-S6-081-lab3/","title":"MIT6 S-081-lab3"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MIT6 S-081-lab3 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/08/01/MIT-S6-081-lab3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MIT6 S-081-lab3 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MIT6 S-081-lab3
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-01 15:33:11" itemprop="dateCreated datePublished" datetime="2022-08-01T15:33:11+08:00">2022-08-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-11 09:44:48" itemprop="dateModified" datetime="2022-08-11T09:44:48+08:00">2022-08-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/MIT6-S-081/" itemprop="url" rel="index"><span itemprop="name">MIT6 S.081</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="MIT6-S-081-lab3："><a href="#MIT6-S-081-lab3：" class="headerlink" title="MIT6 S-081-lab3："></a>MIT6 S-081-lab3：</h3><p>实验二中主要熟悉了系统调用的编写，实验三则是涉及到xv6系统的内存系统。</p>
+<span id="more"></span>
+
+<p>页表是分页机制的关键，负责记录虚拟页到物理页的映射关系，假如通过线性数组记录映射关系，对于64位虚拟地址空间，页大小为4KB，页表中每一项为8字节，则一张页表大小为2^64*8bit&#x2F;4KB，为33554432GB，需要巨额存储空间，这种设计显然是不合理的，因此页表通常通过多级页表来实现。</p>
+<p><img src="/2022/08/01/MIT-S6-081-lab3/MIT-S6-081-lab3%5Cxv6%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0.png" alt="xv6系统中多级页表的实现"></p>
+<p><strong>（一）给系统调用加速</strong></p>
+<p>通过加一层只读缓存给系统调用 ugetpid() 加速，在系统用户态和内核态之间加一个缓存，用户调用缓存中的系统调用时可之间通过缓存调用，无需在用户态和内核态之间切换。缓存的实现需要我们对页表进行相关操作，从虚拟页中开辟出一片空间并初始化，使其可用存储系统调用的缓存并被用户读取。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一块新的内存区域作为缓冲区</span></span><br><span class="line"><span class="comment">//USYSCALL表示缓存的起始位置</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> USYSCALL (TRAMPOLINE - PGSIZE)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">usyscall</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> pid;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//将该进程的地址USYSCALL强转为struct usyscall*类型的指针，然后返回指向的结构体成员pid</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">ugetpid</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">usyscall</span> *<span class="title">u</span> =</span>(<span class="keyword">struct</span> usyscall *) USYSCALL;</span><br><span class="line">  <span class="keyword">return</span> u-&gt;pid;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//为系统调用分配内存空间并设置该内存空间用户可读</span></span><br><span class="line"><span class="keyword">if</span>(mappages(pagetable, USYSCALL, PGSIZE,</span><br><span class="line">            (uint64)(p-&gt;usyscall), PTE_R | PTE_U) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">    uvmunmap(pagetable, TRAMPOLINE, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    uvmunmap(pagetable, USYSCALL, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    uvmfree(pagetable, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>((p-&gt;usyscall = (<span class="keyword">struct</span> usyscall *)kalloc()) == <span class="number">0</span>)&#123;</span><br><span class="line">    freeproc(p);</span><br><span class="line">    release(&amp;p-&gt;lock);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">p-&gt;usyscall-&gt;pid=p-&gt;pid;</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放内存空间freeproc、freepagetable两个函数</span></span><br><span class="line">uvmunmap(pagetable, USYSCALL, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span>(p-&gt;usyscall)</span><br><span class="line">    kfree((<span class="type">void</span>*)p-&gt;usyscall);</span><br><span class="line">p-&gt;usyscall = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（二）打印页表信息</strong>：写一个可以打印页表目录树的函数，定义一个叫vmprint()的函数，该函数获取一个pagetable_t类型的参数，并按照指定格式打印出页表目录。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在exec中修改相关内容，使得pid为1的进程打印页表目录树</span></span><br><span class="line"><span class="keyword">if</span>(<span class="number">1</span> == p-&gt;pid) vmprint(p-&gt;pagetable,<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义前缀表示当前深度</span></span><br><span class="line"><span class="type">static</span> <span class="type">char</span> *prefix[]=&#123;</span><br><span class="line">  [<span class="number">0</span>]=<span class="string">&quot;..&quot;</span>,</span><br><span class="line">  [<span class="number">1</span>]=<span class="string">&quot;.. ..&quot;</span>,</span><br><span class="line">  [<span class="number">2</span>] = <span class="string">&quot;.. .. ..&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">vmprint</span><span class="params">(<span class="type">pagetable_t</span> pagetable, uint64 depth)</span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(depth&gt;<span class="number">2</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(depth==<span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;page table %p\n&quot;</span>,pagetable);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">char</span>* buf=prefix[depth];</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">512</span>; i++)&#123;</span><br><span class="line">    <span class="type">pte_t</span> pte = pagetable[i];</span><br><span class="line">    <span class="keyword">if</span>(pte &amp; PTE_V)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s%d: pte %p pa %p\n&quot;</span>,buf,i,pte,PTE2PA(pte));</span><br><span class="line">      uint64 child = PTE2PA(pte);</span><br><span class="line">      vmprint((<span class="type">pagetable_t</span>) child,depth+<span class="number">1</span>);</span><br><span class="line">    &#125; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*		最终结果——页表结构</span></span><br><span class="line"><span class="comment">page table 0x0000000087f6f000</span></span><br><span class="line"><span class="comment">..0: pte 0x0000000021fdac01 pa 0x0000000087f6b000</span></span><br><span class="line"><span class="comment">.. ..0: pte 0x0000000021fda801 pa 0x0000000087f6a000</span></span><br><span class="line"><span class="comment">.. .. ..0: pte 0x0000000021fdb01f pa 0x0000000087f6c000</span></span><br><span class="line"><span class="comment">.. .. ..1: pte 0x0000000021fda40f pa 0x0000000087f69000</span></span><br><span class="line"><span class="comment">.. .. ..2: pte 0x0000000021fda01f pa 0x0000000087f68000</span></span><br><span class="line"><span class="comment">..255: pte 0x0000000021fdb801 pa 0x0000000087f6e000</span></span><br><span class="line"><span class="comment">.. ..511: pte 0x0000000021fdb401 pa 0x0000000087f6d000</span></span><br><span class="line"><span class="comment">.. .. ..510: pte 0x0000000021fddc07 pa 0x0000000087f77000</span></span><br><span class="line"><span class="comment">.. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>（三）检查内存页的 PTE_A 标志位</strong></p>
+<p>相关标志位的含义：PTE_V是否合法，PTE_U是否可用被用户态访问，PTE_R 和 PTE_W 表示读写权限。</p>
+<p><img src="/2022/08/01/MIT-S6-081-lab3/MIT-S6-081-lab3%5C%E6%A0%87%E5%BF%97%E4%BD%8D%E5%9C%A8%E9%A1%B5%E8%A1%A8%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE.png" alt="标志位在页表中的位置"></p>
+<p>实验三要检测页表中被读写的页表，并将其 PTE_A设置为1，这里的 A 代表的意思是 access ，并返回相应的结果，如果返回结果是1的话，函数在返回后将 PTE_A 恢复设置为0。（类似于epoll的边沿触发）</p>
+<p>传入参数：pagetable	返回结果：bitmask ，通过位图实现结果的传递。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//参考walk函数：将虚拟地址转化为实际物理地址</span></span><br><span class="line"><span class="type">pte_t</span> *		<span class="comment">//输入参数分别是页表：虚拟地址，alloc表示是否分配</span></span><br><span class="line">walk(<span class="type">pagetable_t</span> pagetable, uint64 va, <span class="type">int</span> alloc)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span>(va &gt;= MAXVA)</span><br><span class="line">    panic(<span class="string">&quot;walk&quot;</span>);</span><br><span class="line">	<span class="comment">//先进行两场页表映射</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> level = <span class="number">2</span>; level &gt; <span class="number">0</span>; level--) &#123;</span><br><span class="line">    <span class="type">pte_t</span> *pte = &amp;pagetable[PX(level, va)];</span><br><span class="line">    <span class="keyword">if</span>(*pte &amp; PTE_V) &#123;	<span class="comment">//判断该地址是否合法（已经被分配）</span></span><br><span class="line">      pagetable = (<span class="type">pagetable_t</span>)PTE2PA(*pte);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;	<span class="comment">//不合法且不分配返回，分配则分配后继续映射</span></span><br><span class="line">      <span class="keyword">if</span>(!alloc || (pagetable = (<span class="type">pde_t</span>*)kalloc()) == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">      <span class="built_in">memset</span>(pagetable, <span class="number">0</span>, PGSIZE);</span><br><span class="line">      *pte = PA2PTE(pagetable) | PTE_V;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &amp;pagetable[PX(<span class="number">0</span>, va)];		<span class="comment">//返回第三次映射的结果即为实际物理地址</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加系统调用，系统调用获取参数后调用函数vm_pgaccess进行查询</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sys_pgaccess</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">  uint64 addr;</span><br><span class="line">  <span class="type">int</span> len,bitmask;</span><br><span class="line">  <span class="keyword">if</span>(argaddr(<span class="number">0</span>,&amp;addr)&lt;<span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="keyword">if</span>(argint(<span class="number">1</span>,&amp;len)&lt;<span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="keyword">if</span>(argint(<span class="number">2</span>,&amp;bitmask)&lt;<span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="keyword">if</span>(len&gt;<span class="number">32</span>||len&lt;<span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span>=</span>myproc();</span><br><span class="line">  <span class="type">int</span> res=<span class="number">0x1111</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">    <span class="type">int</span> va=addr+i*PGSIZE;</span><br><span class="line">    <span class="type">int</span> abit=vm_pgaccess(p-&gt;pagetable,va);</span><br><span class="line">    res = res |abit &lt;&lt; i;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span>(copyout(p-&gt;pagetable,bitmask,(<span class="type">char</span>*)&amp;res,<span class="keyword">sizeof</span>(res))&lt;<span class="number">0</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实现vm_pgaccess函数进行判断：</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PTE_A (1L &lt;&lt; 6)		<span class="comment">//首先添加宏定义标志位，由硬件实现置1</span></span></span><br><span class="line"><span class="comment">//参考walkadd函数实现，其本身实现判断当前虚拟地址是否合法（PET_V），合法则返回物理地址</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">vm_pgaccess</span><span class="params">(<span class="type">pagetable_t</span> pagetable,uint64 va)</span>&#123;</span><br><span class="line">  <span class="type">pte_t</span> *pte;</span><br><span class="line">  <span class="keyword">if</span>(va &gt;= MAXVA)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  pte = walk(pagetable, va, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">if</span>(pte == <span class="number">0</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span>((*pte &amp; PTE_A) != <span class="number">0</span>)&#123;</span><br><span class="line">    *pte=*pte &amp; (~PTE_A);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux-c-c/" rel="tag"># Linux c/c++</a>
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+              <a href="/tags/MIT6-S081/" rel="tag"># MIT6.S081</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/31/IO%E6%A8%A1%E5%9E%8B/" rel="prev" title="IO模型">
+                  <i class="fa fa-chevron-left"></i> IO模型
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/01/%E5%AD%97%E5%85%B8%E6%A0%91/" rel="next" title="字典树">
+                  字典树 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

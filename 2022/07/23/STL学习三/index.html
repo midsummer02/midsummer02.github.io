@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="STL的容器序列式容器（containers）:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STL学习三">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/23/STL%E5%AD%A6%E4%B9%A0%E4%B8%89/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="STL的容器序列式容器（containers）:">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://midsummer02.github.io/2022/07/23/STL%E5%AD%A6%E4%B9%A0%E4%B8%89/STL%E5%AD%A6%E4%B9%A0%E4%B8%89%5Cdeque%E7%9A%84%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.png">
+<meta property="article:published_time" content="2022-07-23T04:56:47.000Z">
+<meta property="article:modified_time" content="2022-08-09T03:00:57.873Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="STL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://midsummer02.github.io/2022/07/23/STL%E5%AD%A6%E4%B9%A0%E4%B8%89/STL%E5%AD%A6%E4%B9%A0%E4%B8%89%5Cdeque%E7%9A%84%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.png">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/23/STL%E5%AD%A6%E4%B9%A0%E4%B8%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/23/STL%E5%AD%A6%E4%B9%A0%E4%B8%89/","path":"2022/07/23/STL学习三/","title":"STL学习三"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>STL学习三 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/23/STL%E5%AD%A6%E4%B9%A0%E4%B8%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="STL学习三 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STL学习三
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-23 12:56:47" itemprop="dateCreated datePublished" datetime="2022-07-23T12:56:47+08:00">2022-07-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-09 11:00:57" itemprop="dateModified" datetime="2022-08-09T11:00:57+08:00">2022-08-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">语言学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="STL的容器序列式容器（containers）"><a href="#STL的容器序列式容器（containers）" class="headerlink" title="STL的容器序列式容器（containers）:"></a>STL的容器序列式容器（containers）:</h1><span id="more"></span>
+
+<p>序列式容器指的是其中的元素都可序，但是未必有序，比如vector，list，deque和slist等。</p>
+<h4 id="vector："><a href="#vector：" class="headerlink" title="vector："></a>vector：</h4><p>vector定义了三个迭代器来指向三个边界：</p>
+<p>由于vector有可以根据下标随机访取的能力，因此所用的是随机迭代器（Random Iterator）。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>,<span class="keyword">class</span> <span class="title class_">Alloc</span>=alloc&gt;</span><br><span class="line"><span class="keyword">class</span> vector&#123;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    iterator start;			 <span class="comment">//表示目前使用空间的头</span></span><br><span class="line">    iterator finish;		 <span class="comment">//表示目前使用空间的尾</span></span><br><span class="line">    iterator end_of_storage; <span class="comment">//表示目前可用空间的尾</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//利用这三个迭代器可用轻易访问一个vector容器的首尾标识，大小和容量......</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>vector的扩容机制</strong>：</p>
+<p>每次向vector中插入元素时均应检查是否还有备用空间：如果集合已满，在新增数据的时候，就要分配⼀块更⼤的内存，将原来的数据复制过来，释放之前的内存，再插⼊新增的元素。整个扩容分为三个步骤：配置新空间，转移元素，释放原来的元素与空间。由于空间重新配置会导致原来的空间部分被析构，所以在这之后指向原vector的所有迭代器就也都失效了。</p>
+<p>如何确定这块更大的内存的大小，这里提供两种扩容方法：</p>
+<p>1、固定扩容： 每次扩容的时候在原 capacity 的基础上加上固定的容量，⽐如初始 capacity 为100，扩容⼀次为 capacity + 20， 再扩容仍然为 capacity + 20; </p>
+<p>缺点： 考虑⼀种极端的情况，vector每次添加的元素数量刚好等于每次扩容固定增加的容量 + 1，就会造成⼀种情况，每添加⼀次元素就需要扩容⼀次，⽽扩容的时间花费⼗分⾼昂。所以固定扩容可能会⾯临多次扩容的情况，时间复杂度较⾼;  优点： 固定扩容⽅式空间利⽤率⽐较⾼。  </p>
+<p>2、<strong>加倍扩容</strong>： 每次扩容的时候原 capacity 翻倍，⽐如初始capcity &#x3D; 100, 扩容⼀次变为 200, 再扩容变为 400;  </p>
+<p>优点： ⼀次扩容 capacity 翻倍的⽅式使得正常情况下添加元素需要扩容的次数⼤⼤减少（预留空间较多），时间复杂度较低;  缺点：因为每次扩容空间翻倍，⽽很多空间没有利⽤上，空间利⽤率不如固定扩容。</p>
+<p><strong>vector的删除插入机制：</strong></p>
+<p>删除：把vector中要删除位置后面的所有数据移动到要删除的位置，然后删除最后一个位置的数据来实现的。</p>
+<p>插入：不能正确实现原vector尾部的插入，其他都可以。按照是否需要扩容可以分为两种情况，不扩容是把当前要插入元素的位置后面的元素向后移动，然后把待插入元素插入到相应的位置。</p>
+<h4 id="list："><a href="#list：" class="headerlink" title="list："></a>list：</h4><p>list容器分为两部分，一个是list本身，另一个是list中的节点，节点中包含两个指针next和pre，且首元素的pre指向尾元素，因此可知list本质上是一个环形双向链表，其存储的地址空间可以不连续，迭代器应该具有前移和后移的功能（这里++和–指向的是next和pre指向的节点），因此用的是双向迭代器（Biadirectional Iterator）。不仅如此，list还具有一个重要性质，即插入操作和接合操作都不会造成原来的迭代器失效。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//相关函数操作</span></span><br><span class="line"><span class="comment">//将数值为value的所有元素清除</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>,<span class="keyword">class</span> <span class="title class_">Alloc</span>&gt;</span><br><span class="line"><span class="type">void</span> list&lt;T,Alloc&gt;::<span class="built_in">remove</span>(<span class="type">const</span> T&amp; value)&#123;</span><br><span class="line">    iterator first=<span class="built_in">begin</span>();</span><br><span class="line">    iterator last=<span class="built_in">end</span>();</span><br><span class="line">    <span class="keyword">while</span>(first!=last)&#123;</span><br><span class="line">        iterator next=first;</span><br><span class="line">        ++next;</span><br><span class="line">        <span class="keyword">if</span>(*next==value)<span class="built_in">erase</span>(first);</span><br><span class="line">        first=next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//移除数值相同的连续元素</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>,<span class="keyword">class</span> <span class="title class_">Alloc</span>&gt;</span><br><span class="line"><span class="type">void</span> list&lt;T,Alloc&gt;::<span class="built_in">remove</span>()&#123;</span><br><span class="line">    iterator first=<span class="built_in">begin</span>();</span><br><span class="line">    iterator last=<span class="built_in">end</span>();</span><br><span class="line">    <span class="keyword">if</span>(first==last)<span class="keyword">return</span> ;</span><br><span class="line">    iterator next=first;</span><br><span class="line">    <span class="keyword">while</span>(++next!=last)&#123;</span><br><span class="line">		<span class="keyword">if</span>(*first==*next)</span><br><span class="line">            <span class="built_in">erase</span>(next);</span><br><span class="line">        <span class="keyword">else</span> first=next;</span><br><span class="line">        next=first;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//除了上诉操作，还有像splice、merge、reverse、sort等操作</span></span><br><span class="line"><span class="comment">//其实现均依赖于一个内部接口transfer,将[first,last)内的元素移动到position之前</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">transfer</span><span class="params">(iterator position,iterator first,iterator,last)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">//将x接合于position所指位置之前，x必须不同于*this</span></span><br><span class="line"> <span class="function"><span class="type">void</span> <span class="title">splice</span><span class="params">(iterator position,last &amp;x)</span></span>&#123;</span><br><span class="line">     <span class="keyword">if</span>(!x.<span class="built_in">empty</span>())</span><br><span class="line">         <span class="built_in">transfer</span>(position,x.<span class="built_in">begin</span>(),x.<span class="built_in">end</span>());</span><br><span class="line"> &#125;</span><br><span class="line"><span class="comment">//除此之外还有其他多个版本</span></span><br><span class="line"><span class="comment">//将i所指元素接合于position所指位置之前，position和i可能指向同一个list</span></span><br><span class="line"> <span class="function"><span class="type">void</span> <span class="title">splice</span><span class="params">(iterator position,last &amp;x,iterator i)</span></span>;</span><br><span class="line"><span class="comment">//将[first,last)内的元素接合于position所指位置之前，</span></span><br><span class="line"><span class="comment">//两者可能指向同一个list，但是position不能位于区间内</span></span><br><span class="line"> <span class="function"><span class="type">void</span> <span class="title">splice</span><span class="params">(iterator position,last &amp;,iterator first,iterator last)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="deque："><a href="#deque：" class="headerlink" title="deque："></a>deque：</h4><p>deque双向队列，是⼀个双端开⼝的连续线性空间，其内部为分段连续的空间组成，随时可以增加⼀段新的空间并链接。（vector的头部插入删除效率极差，一般只在尾部进行相关操作，因此是单向开口）</p>
+<p>deque是由⼀段⼀段的定量。⼀旦有必要在其头端或者尾端增加新的空间，便配置⼀段定量连续空间，串接在整个deque的头端或者尾端连续空间构成。而为了维护这一整体的连续性，即连接实际空间不连续的分段空间，需要一个中控器，在deque的实现中采用的是map作为主控。和map容器不同，这里的map指的是一小块连续空间，其中每个元素指向另一段较大的连续空间，即deque的存储空间主体——缓冲区。</p>
+<p><img src="/2022/07/23/STL%E5%AD%A6%E4%B9%A0%E4%B8%89/STL%E5%AD%A6%E4%B9%A0%E4%B8%89%5Cdeque%E7%9A%84%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84.png" alt="deque的存储结构"></p>
+<h4 id="stack和queue："><a href="#stack和queue：" class="headerlink" title="stack和queue："></a>stack和queue：</h4><p>栈和队列是比较熟悉数据结构了，其底层实现其实均依赖于deque，两者通常并不被归类于容器，而是将其视为deque的接配器(adapters)。除此之外，由于栈和队列的数据分别满足先进后出和先进先出的要求，因此两者均不提供走访功能，没有迭代器。虽然默认stack和queue的底层容器是deque，但双向开口的容器并不只有deque，list同样也可以作为底层容器实现stack和queue。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stack&lt;<span class="type">int</span>,list&lt;<span class="type">int</span>&gt;&gt; st; queue&lt;<span class="type">double</span>,list&lt;<span class="type">double</span>&gt;&gt; q;</span><br></pre></td></tr></table></figure>
+
+<h4 id="heap和priority-queue"><a href="#heap和priority-queue" class="headerlink" title="heap和priority_queue:"></a>heap和priority_queue:</h4><p>heap（堆）： 建⽴在完全⼆叉树上，分为两种，⼤根堆，⼩根堆，其在STL中做priority_queue的助⼿，即以任何顺序将元素推 ⼊容器中，然后取出时⼀定是从优先权最⾼的元素开始取，完全⼆叉树具有这样的性质，适合做priority_queue的底层 。</p>
+<p>priority_queue:  优先队列，也是配接器。其内的元素不是按照被推⼊的顺序排列，⽽是⾃动取元素的权值排列，默认情况下利⽤⼀ 个max-heap完成，后者是以vector表现的完全⼆叉树。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//还是复习一下一直记不住堆排序吧家人们。</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">adjustheap</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> i, <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> left = <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> right = left + <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> max = i;</span><br><span class="line">    <span class="keyword">if</span> (left &lt; len &amp;&amp; nums[max] &lt; nums[left])max = left;</span><br><span class="line">    <span class="keyword">if</span> (right &lt; len &amp;&amp; nums[max] &lt; nums[right])max = right;</span><br><span class="line">    <span class="keyword">if</span> (max != i) &#123;</span><br><span class="line">        <span class="comment">//如果比子树小，则继续调整至叶子节点</span></span><br><span class="line">        <span class="built_in">swap</span>(nums, i, max);</span><br><span class="line">        <span class="built_in">adjustheap</span>(nums, max, len);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">heapsort</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = nums.<span class="built_in">size</span>() / <span class="number">2</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">        <span class="comment">//从最后一个非叶子节点进行调整</span></span><br><span class="line">        <span class="built_in">adjustheap</span>(nums, i, nums.<span class="built_in">size</span>());</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = nums.<span class="built_in">size</span>() - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="comment">//将大顶堆的顶部调到最后</span></span><br><span class="line">        <span class="built_in">swap</span>(nums, <span class="number">0</span>, i);</span><br><span class="line">        <span class="comment">//重新调整剩下i-1个元素为大顶堆</span></span><br><span class="line">        <span class="built_in">adjustheap</span>(nums, <span class="number">0</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="slist："><a href="#slist：" class="headerlink" title="slist："></a>slist：</h4><p>slist是单向链表，所需迭代器只用前向迭代器（Forward Iterator），其他性质于list基本相同，只是缺少前向指针pre。元素操作例如pop_front()，push_front()，pop_back()，push_back()，insert() 等也均支持。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/STL/" rel="tag"># STL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/22/MIT-S6-081-lab1/" rel="prev" title="MIT6 S.081 lab1">
+                  <i class="fa fa-chevron-left"></i> MIT6 S.081 lab1
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/26/STL%E5%AD%A6%E4%B9%A0%E5%9B%9B/" rel="next" title="STL学习四">
+                  STL学习四 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="关于智能指针：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++智能指针">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/22/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="关于智能指针：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-22T05:18:11.000Z">
+<meta property="article:modified_time" content="2022-08-09T06:13:03.819Z">
+<meta property="article:author" content="Sun">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/22/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/22/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/","path":"2022/07/22/C-智能指针/","title":"C++智能指针"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C++智能指针 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/22/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C++智能指针 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++智能指针
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-22 13:18:11" itemprop="dateCreated datePublished" datetime="2022-07-22T13:18:11+08:00">2022-07-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-09 14:13:03" itemprop="dateModified" datetime="2022-08-09T14:13:03+08:00">2022-08-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">语言学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="关于智能指针："><a href="#关于智能指针：" class="headerlink" title="关于智能指针："></a>关于智能指针：</h1><span id="more"></span>
+
+<p>指针在c++中会被经常使用，但是指针的使用不当往往会造成内存泄漏，多次释放等问题。</p>
+<h5 id="内存泄漏的实例："><a href="#内存泄漏的实例：" class="headerlink" title="内存泄漏的实例："></a>内存泄漏的实例：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//指针重新赋值</span></span><br><span class="line"><span class="type">char</span> * p = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);</span><br><span class="line"><span class="type">char</span> * np = (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);</span><br><span class="line">p=np; <span class="comment">//np指向的空间没有被释放</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//返回值未处理</span></span><br><span class="line"><span class="function"><span class="type">char</span> *<span class="title">f</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> (<span class="type">char</span> *)<span class="built_in">malloc</span>(<span class="number">10</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f1</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="built_in">f</span>();</span><br><span class="line">&#125; <span class="comment">//函数*f分配的空间没有释放</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//内存多次释放的实例</span></span><br><span class="line"><span class="type">int</span> *a1 = <span class="keyword">new</span> <span class="built_in">int</span>(<span class="number">3</span>);</span><br><span class="line"><span class="type">int</span> *b1 = a1;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">delete</span> a1;</span><br><span class="line">a1 = <span class="literal">nullptr</span>;</span><br><span class="line"><span class="keyword">delete</span> b1; </span><br><span class="line">b1 = <span class="literal">nullptr</span>; <span class="comment">// 释放了两次相同的内存空间</span></span><br></pre></td></tr></table></figure>
+
+<p>而通过智能指针可以防止程序员忘记delete释放内存，也可以防止多次释放同一内存导致程序报错。其实现是将普通指针封装成类，<strong>智能指针有三种</strong>：unique_ptr<T>、shared_ptr<T>和weak_ptr<T>。</T></T></T></p>
+<h4 id="unique-ptr-：独占资源所有权的指针。"><a href="#unique-ptr-：独占资源所有权的指针。" class="headerlink" title="unique_ptr ：独占资源所有权的指针。"></a><strong>unique_ptr<T></T></strong> ：独占资源所有权的指针。</h4><p>同一时刻只能有一个unique_ptr指向给定对象（通过禁止拷贝语义、只有移动语义来实现）。在出现异常的情况下，动态资源能得到释放。unique_ptr指针本身的生命周期：从unique_ptr指针创建时开始，直到离开作用域。离开作用域时，若其指向对象，则将其所指对象销毁(默认使用delete操作符，用户可指定其他操作)。unique_ptr指针与其所指对象的关系：在智能指针生命周期内，可以改变智能指针所指对象，如创建智能指针时通过构造函数指定、通过reset方法重新指定、通过release方法释放所有权、通过移动语义转移所有权。</p>
+<p>make_unique 创建并返回 unique_ptr 至指定类型对象，可以取代new 且无需 delete pointer，有助于代码管理。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">unique_ptr&lt;<span class="type">int</span>&gt; <span class="title">uptr</span><span class="params">(<span class="keyword">new</span> <span class="type">int</span>(<span class="number">10</span>))</span></span>;  <span class="comment">//绑定动态对象</span></span><br><span class="line"><span class="comment">//unique_ptr&lt;int&gt; uptr2 = uptr;  //不能赋值</span></span><br><span class="line"><span class="comment">//unique_ptr&lt;int&gt; uptr2(uptr);  //不能拷贝</span></span><br><span class="line">unique_ptr&lt;<span class="type">int</span>&gt; uptr2 = <span class="built_in">move</span>(uptr); <span class="comment">//转换所有权</span></span><br><span class="line">uptr2.<span class="built_in">release</span>(); <span class="comment">//释放所有权</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="shared-ptr-：共享资源所有权的指针。"><a href="#shared-ptr-：共享资源所有权的指针。" class="headerlink" title="shared_ptr ：共享资源所有权的指针。"></a><strong>shared_ptr<T></T></strong> ：共享资源所有权的指针。</h4><p>shared_ptr多个指针指向相同的对象。shared_ptr使用引用计数，每一个shared_ptr的拷贝都指向相同的内存。每使用他一次，内部的引用计数加1，每析构一次，内部的引用计数减1，减为0时，自动删除所指向的堆内存。shared_ptr内部的引用计数是线程安全的，但是对象的读取需要加锁。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="comment">//初始化</span></span><br><span class="line">shared_ptr&lt;<span class="type">int</span>&gt; ptra = <span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(a);</span><br><span class="line"><span class="comment">//复制</span></span><br><span class="line"><span class="function">shared_ptr&lt;<span class="type">int</span>&gt; <span class="title">ptra2</span><span class="params">(ptra)</span></span>; </span><br><span class="line"><span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line"><span class="type">int</span> *pb = &amp;b;</span><br><span class="line"><span class="comment">//shared_ptr&lt;int&gt; ptrb = pb;  //error 不支持将指针赋值给一个类</span></span><br><span class="line">shared_ptr&lt;<span class="type">int</span>&gt; ptrb = std::<span class="built_in">make_shared</span>&lt;<span class="type">int</span>&gt;(b);</span><br><span class="line">pb = ptrb.<span class="built_in">get</span>(); <span class="comment">//获取原始指针</span></span><br></pre></td></tr></table></figure>
+
+<p>shared_ptr 需要维护的信息有两部分：</p>
+<ol>
+<li>指向共享资源的指针。</li>
+<li>引用计数等共享资源的控制信息——实现上是维护一个指向控制信息的指针</li>
+</ol>
+<p>P.S.：</p>
+<p>shared_ptr使用时注意不要用一个原始指针初始化多个shared_ptr，否则会造成二次释放同一内存；</p>
+<p>注意避免<strong>循环引用</strong>（即两个shared_ptr相互指向对方，此时可以通过将其中一个改为weak_ptr即可避免循环引用），循环引用会导致堆内存无法正确释放，导致内存泄漏。</p>
+<h4 id="weak-ptr-：共享资源的观察者，和shared-ptr-一起使用，不影响资源的生命周期。"><a href="#weak-ptr-：共享资源的观察者，和shared-ptr-一起使用，不影响资源的生命周期。" class="headerlink" title="weak_ptr ：共享资源的观察者，和shared_ptr 一起使用，不影响资源的生命周期。"></a><strong>weak_ptr<T></T></strong> ：共享资源的观察者，和shared_ptr 一起使用，不影响资源的生命周期。</h4><p>如果需要使用 weak_ptr 正在观察的资源，可以将 weak_ptr 提升为 shared_ptr；当 shared_ptr 管理的资源被释放时，weak_ptr 会自动变成 nullptr；当 shared_ptr 析构并释放共享资源的时候，只要 weak_ptr 对象还存在，控制块就会保留，weak_ptr 可以通过控制块观察到对象是否存活。</p>
+<p>weak_ptr不具有普通指针的行为，没有重载operator*和-&gt;，它的最大作用在于协助shared_ptr工作，像旁观者那样观测资源的使用情况。weak_ptr可以从一个shared_ptr或者另一个weak_ptr对象构造，获得资源的观测权。但weak_ptr没有共享资源，它的构造不会引起指针引用计数的增加。使用weak_ptr的成员函数use_count()可以观测资源的引用计数，另一个成员函数expired()的功能等价于use_count()&#x3D;&#x3D;0,但更快，表示被观测的资源(也就是shared_ptr的管理的资源)已经不复存在。weak_ptr可以使用一个非常重要的成员函数lock()从被观测的shared_ptr获得一个可用的shared_ptr对象， 从而操作资源。但当expired()&#x3D;&#x3D;true的时候，lock()函数将返回一个存储空指针的shared_ptr。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/20/STL%E5%AD%A6%E4%B9%A0%E4%BA%8C/" rel="prev" title="STL学习二">
+                  <i class="fa fa-chevron-left"></i> STL学习二
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/22/MIT-S6-081-lab1/" rel="next" title="MIT6 S.081 lab1">
+                  MIT6 S.081 lab1 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

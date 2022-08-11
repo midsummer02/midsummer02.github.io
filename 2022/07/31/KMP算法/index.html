@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="字符串匹配的经典算法：KMP算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMP算法">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/31/KMP%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="字符串匹配的经典算法：KMP算法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://midsummer02.github.io/2022/07/31/KMP%E7%AE%97%E6%B3%95/KMP%E7%AE%97%E6%B3%95%5Caabaaf%E7%9A%84%E5%89%8D%E7%BC%80%E8%A1%A8.png">
+<meta property="article:published_time" content="2022-07-31T01:13:45.000Z">
+<meta property="article:modified_time" content="2022-07-31T05:00:57.895Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="KMP算法">
+<meta property="article:tag" content="字符串">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://midsummer02.github.io/2022/07/31/KMP%E7%AE%97%E6%B3%95/KMP%E7%AE%97%E6%B3%95%5Caabaaf%E7%9A%84%E5%89%8D%E7%BC%80%E8%A1%A8.png">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/31/KMP%E7%AE%97%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/31/KMP%E7%AE%97%E6%B3%95/","path":"2022/07/31/KMP算法/","title":"KMP算法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>KMP算法 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/31/KMP%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="KMP算法 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KMP算法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-07-31 09:13:45 / 修改时间：13:00:57" itemprop="dateCreated datePublished" datetime="2022-07-31T09:13:45+08:00">2022-07-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h4 id="字符串匹配的经典算法：KMP算法"><a href="#字符串匹配的经典算法：KMP算法" class="headerlink" title="字符串匹配的经典算法：KMP算法"></a>字符串匹配的经典算法：KMP算法</h4><span id="more"></span>
+
+<p>KMP主要应用在字符串匹配上，其主要思想是<strong>当出现字符串不匹配时，可以知道一部分之前已经匹配的文本内容，可以利用这些信息避免从头再去做匹配。</strong>这一思想的实现需要一个前缀表来记录<strong>模式串</strong>的最长相等前后缀的长度，并以此长度作为回退的下标重新匹配。前缀表的实现通常是用next数组。</p>
+<h4 id="最长公共前后缀："><a href="#最长公共前后缀：" class="headerlink" title="最长公共前后缀："></a>最长公共前后缀：</h4><p>前缀是指<strong>不包含最后一个字符</strong>的所有以第一个字符开头的连续子串，而后缀是指<strong>不包含第一个字符</strong>的所有以最后一个字符结尾的连续子串，公共前后缀则是前缀和后缀相等的长度，以子串aabaaf举例：</p>
+<p>子串a长度为1，不满足上述前缀后缀定义，没有前缀和后缀，最长公共前后缀长度为0；</p>
+<p>子串aa中前缀a和后缀a相等，最长公共前后缀长度为1；</p>
+<p>子串aab中前缀a开头a结尾，而后缀b结尾，不匹配，最长公共前后缀长度为0；</p>
+<p>子串aaba中前缀a开头b结尾，而b后缀a结尾，只有a和a匹配，最长公共前后缀长度为1；</p>
+<p>子串aabaa中前缀aa和后缀aa相等，最长公共前后缀长度为2；</p>
+<p>子串aabaaf中前缀a开头a&#x2F;b结尾，而后缀必定f结尾，不匹配，最长公共前后缀长度为0；</p>
+<p><img src="/2022/07/31/KMP%E7%AE%97%E6%B3%95/KMP%E7%AE%97%E6%B3%95%5Caabaaf%E7%9A%84%E5%89%8D%E7%BC%80%E8%A1%A8.png" alt="aabaaf的前缀表"></p>
+<h4 id="前缀表的代码实现："><a href="#前缀表的代码实现：" class="headerlink" title="前缀表的代码实现："></a>前缀表的代码实现：</h4><p>当字符串不匹配时，应该根据next数组中前一位的下标一直回溯，直到下标为0的初始位置或者两字符相等。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">getNext</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;next, <span class="type">const</span> string&amp; s)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> j = <span class="number">0</span>;</span><br><span class="line">    next[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; s.<span class="built_in">size</span>(); i++) &#123;	<span class="comment">// 注意i从1开始</span></span><br><span class="line">        <span class="keyword">while</span> (j &gt; <span class="number">0</span> &amp;&amp; s[i] != s[j]) &#123; <span class="comment">// j要保证大于0，因为下面有取j-1作为数组下标的操作</span></span><br><span class="line">            j = next[j - <span class="number">1</span>]; <span class="comment">// 注意这里，是要找前一位的对应的回退位置了</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (s[i] == s[j]) &#123;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        next[i] = j; <span class="comment">// 将j（前缀的长度）赋给next[i]</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="通过前缀表进行字符串匹配："><a href="#通过前缀表进行字符串匹配：" class="headerlink" title="通过前缀表进行字符串匹配："></a>通过前缀表进行字符串匹配：</h4><p>假设模式串为pattern，要匹配模式串的字符串为s，返回模式串出现的第一个位置。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">fun</span><span class="params">(string pattern,string s)</span></span></span><br><span class="line"><span class="function">    vector&lt;<span class="type">int</span>&gt; <span class="title">next</span><span class="params">(pattern.size())</span></span>;</span><br><span class="line">    <span class="built_in">getNext</span>(next,pattern);</span><br><span class="line">    <span class="type">int</span> j=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;s.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">        <span class="keyword">while</span>(j&gt;<span class="number">0</span>&amp;&amp;s[i]!=pattern[j])j=next[j<span class="number">-1</span>];</span><br><span class="line">        <span class="keyword">if</span>(s[i]==pattern[j])j++;</span><br><span class="line">        <span class="keyword">if</span>(j==pattern.<span class="built_in">size</span>())<span class="keyword">return</span> i-pattern.<span class="built_in">size</span>()+<span class="number">1</span>;</span><br><span class="line">    &#125;	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="KMP算法的基本流程："><a href="#KMP算法的基本流程：" class="headerlink" title="KMP算法的基本流程："></a>KMP算法的基本流程：</h4><ol>
+<li>求模式串的next数组</li>
+<li>遍历比较待匹配的字符串（过程&#x3D;遍历待比较字符串+遍历时根据next数组的回跳）<br>2.1 当前字符匹配时，同时移动 i++，j++<br>2.2 当前字符不匹配，且j&#x3D;0时，只移动 i++，j&#x3D;0不动<br>2.3 当前字符不匹配，且j!&#x3D;0时，i不变，根据next数组回跳。</li>
+</ol>
+<p>假设m为模式串的长度，n为待匹配的字符串的长度。</p>
+<p><strong>KMP算法的时间复杂度为</strong>：O(m+n)&#x3D;O( [m,2m]+ [n,2n] ) &#x3D; 计算next数组的时间复杂度+遍历比较的复杂度。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/KMP%E7%AE%97%E6%B3%95/" rel="tag"># KMP算法</a>
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"># 字符串</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/30/MIT-S6-081-lab2/" rel="prev" title="MIT6 S-081-lab2">
+                  <i class="fa fa-chevron-left"></i> MIT6 S-081-lab2
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/31/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E5%8D%95%E4%BE%8B/" rel="next" title="设计模式————单例">
+                  设计模式————单例 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="基础知识：1.GCC部分：gcc是是由GNU开发的编译器，现已被大多数类Unix操作系统采纳为标准的编译器。 gcc 与 g++ 分别是 gnu 的 c &amp; c++ 编译器 gcc&#x2F;g++ 在执行编译工作的时候，总共需要4步：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux C&#x2F;C++编程总结一">
+<meta property="og:url" content="https://midsummer02.github.io/2022/06/30/Linux%20CC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%9A/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="基础知识：1.GCC部分：gcc是是由GNU开发的编译器，现已被大多数类Unix操作系统采纳为标准的编译器。 gcc 与 g++ 分别是 gnu 的 c &amp; c++ 编译器 gcc&#x2F;g++ 在执行编译工作的时候，总共需要4步：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-30T00:15:16.000Z">
+<meta property="article:modified_time" content="2022-08-03T08:21:58.184Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="Linux c&#x2F;c++">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/06/30/Linux%20CC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%9A/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/06/30/Linux%20CC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%9A/","path":"2022/06/30/Linux CC++编程总结：/","title":"Linux C/C++编程总结一"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux C/C++编程总结一 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/06/30/Linux%20CC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux C/C++编程总结一 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux C/C++编程总结一
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-06-30 08:15:16" itemprop="dateCreated datePublished" datetime="2022-06-30T08:15:16+08:00">2022-06-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-03 16:21:58" itemprop="dateModified" datetime="2022-08-03T16:21:58+08:00">2022-08-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Linux学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础知识</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="基础知识："><a href="#基础知识：" class="headerlink" title="基础知识："></a>基础知识：</h2><h3 id="1-GCC部分："><a href="#1-GCC部分：" class="headerlink" title="1.GCC部分："></a>1.GCC部分：</h3><p>gcc是是由GNU开发的编译器，现已被大多数类Unix操作系统采纳为标准的编译器。</p>
+<p>gcc 与 g++ 分别是 gnu 的 c &amp; c++ 编译器 gcc&#x2F;g++ 在执行编译工作的时候，总共需要4步：</p>
+<span id="more"></span>
+
+<ul>
+<li>1、预处理,生成 .i 的文件[预处理器cpp]</li>
+<li>2、将预处理后的文件转换成汇编语言, 生成文件 .s [编译器egcs]</li>
+<li>3、有汇编变为目标代码(机器代码)生成 .o 的文件[汇编器as]</li>
+<li>4、连接目标代码, 生成可执行程序 [链接器ld]</li>
+</ul>
+<p>gcc 是 GCC 编译器的通用编译指令，因为根据程序文件的后缀名，gcc 指令可以自行判断出当前程序所用编程语言的类别。而g++ 指令，则无论目标文件的后缀名是什么，该指令都一律按照编译 C++ 代码的方式编译该文件。</p>
+<h3 id="gcc-命令的常用选项"><a href="#gcc-命令的常用选项" class="headerlink" title="gcc 命令的常用选项"></a>gcc 命令的常用选项</h3><table>
+<thead>
+<tr>
+<th align="left">选项</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">-c</td>
+<td>只编译并生成目标文件。</td>
+</tr>
+<tr>
+<td align="left">-E</td>
+<td>只运行 C 预编译器预处理源文件，不进行汇编。</td>
+</tr>
+<tr>
+<td align="left">-g</td>
+<td>生成调试信息。GNU 调试器可利用该信息。</td>
+</tr>
+<tr>
+<td align="left">-l LIBRARY</td>
+<td>连接时搜索指定的函数库LIBRARY。</td>
+</tr>
+<tr>
+<td align="left">-o FILE</td>
+<td>生成指定的输出文件。用在生成可执行文件时。</td>
+</tr>
+<tr>
+<td align="left">-O0</td>
+<td>不进行优化处理。</td>
+</tr>
+<tr>
+<td align="left">-O 或 -O1</td>
+<td>优化生成代码。</td>
+</tr>
+<tr>
+<td align="left">-O2</td>
+<td>进一步优化。</td>
+</tr>
+<tr>
+<td align="left">-O3</td>
+<td>比 -O2 更进一步优化，包括 inline 函数。</td>
+</tr>
+<tr>
+<td align="left">-shared</td>
+<td>生成共享目标文件。通常用在建立共享库时。</td>
+</tr>
+<tr>
+<td align="left">-static</td>
+<td>禁止使用共享连接。</td>
+</tr>
+<tr>
+<td align="left">-w</td>
+<td>不生成任何警告信息。</td>
+</tr>
+<tr>
+<td align="left">-Wall</td>
+<td>生成所有警告信息。</td>
+</tr>
+</tbody></table>
+<h4 id="GDB调试相关指令："><a href="#GDB调试相关指令：" class="headerlink" title="GDB调试相关指令："></a>GDB调试相关指令：</h4><p>在使用gcc编译时加入-g命令，编译完成后可以通过GDB进行对程序的调试</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#e.g.</span></span><br><span class="line">gcc hello.c -o hello -g</span><br><span class="line"><span class="comment">#相关命令</span></span><br><span class="line"><span class="comment">#  l -- 表示显示程序源代码</span></span><br><span class="line"><span class="comment">#  b 行数 -- 表示在改行插入断点</span></span><br><span class="line"><span class="comment">#  i b  --表示显示断点信息</span></span><br><span class="line"><span class="comment">#  q -- 退出调试</span></span><br><span class="line"><span class="comment">#  n --逐行执行</span></span><br><span class="line"><span class="comment">#  print var -- 输出变量var的值</span></span><br><span class="line"><span class="comment">#通过设置相关参数可以分别调试父进程和子进程（默认父进程）</span></span><br><span class="line">set follow-fork-mode [parent|child]</span><br><span class="line"><span class="comment">#分别设置调试当前进程时，其他进程的状态（默认调试时正常运行）</span></span><br><span class="line">set detach-on-fork [on|off]</span><br><span class="line"><span class="comment">#设置为off时，其他进程不会继续执行而是暂停挂起</span></span><br><span class="line">info inferiors <span class="comment">#显示当前进程信息</span></span><br><span class="line">inferior id <span class="comment">#切换调试进程</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Makefile文件："><a href="#2-Makefile文件：" class="headerlink" title="2.Makefile文件："></a>2.Makefile文件：</h3><p>Makefile文件可以实现工程的自动化编译，定义了一系列规则来指定哪些文件需要先编译，哪些文件需要后编译，哪些文件需要重新编译，甚至于进行更复杂的功能操作，并且通过一个make命令即可执行，极大的提高了软件开发的效率。Makefile来告诉make命令如何编译和链接这几个文件，其规则为：</p>
+<p>​      <strong>1.如果这个工程没有编译过，那么我们的所有C文件都要编译并被链接。</strong></p>
+<p>​      <strong>2.如果这个工程的某几个C文件被修改，那么我们只编译被修改的C文件，并链接目标程序。</strong></p>
+<p>​      <strong>3.如果这个工程的头文件被改变了，那么我们需要编译引用了这几个头文件的C文件，并链接目标程序</strong></p>
+<p>关于Makefile的语法规则，由目标，依赖和命令三个部分组成，下面举例：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">main:main.o test1.o test2.o</span></span><br><span class="line">	gcc main.o test1.o test2.o -o main</span><br><span class="line"><span class="comment">#通配符的使用：</span></span><br><span class="line">OBJ=*.c</span><br><span class="line"><span class="section">test:<span class="variable">$(OBJ)</span></span></span><br><span class="line">    gcc -o <span class="variable">$@</span> <span class="variable">$^</span></span><br><span class="line"><span class="comment">#变量的定义和使用</span></span><br><span class="line"><span class="comment">#调用变量的时候可以用&quot;$(VALUE_LIST)&quot;或者是&quot;$&#123;VALUE_LIST&#125;&quot;来替换\:</span></span><br><span class="line">OBJ=main.o test.o test1.o test2.o</span><br><span class="line"><span class="section">test:<span class="variable">$(OBJ)</span></span></span><br><span class="line">      gcc -o test <span class="variable">$(OBJ)</span></span><br></pre></td></tr></table></figure>
+
+<p>如果要定义一系列比较类似的文件，可以通过使用通配符来简化代码。关于通配符的使用规则：</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>使用说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>匹配0个或者是任意个字符</td>
+</tr>
+<tr>
+<td>？</td>
+<td>匹配任意一个字符</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>我们可以指定匹配的字符放在 “[]” 中</td>
+</tr>
+</tbody></table>
+<p>除了这三个通配符外，波浪号（“<del>”）字符在文件名中也有比较特殊的用途。如果是“</del>&#x2F;test”，这就表示当前用户的$HOME目录下的test目录。而“~hchen&#x2F;test”则表示用户hchen的宿主目录下的test目录。而在Windows或是MS-DOS下，用户没有宿主目录，那么波浪号所指的目录则根据环境变量“HOME”而定。</p>
+<p>在 Makefile中的定义的变量，类似于是C&#x2F;C++语言中宏，代表了一个文本字串，在Makefile中执行的时候其会自动原样地展开在所使用的地方。其与C&#x2F;C++所不同的是，你可以在Makefile中改变其值。变量的命名可以包含字符、数字，下划线（可以是数字开头），但不应该含有“:”、“#”、“&#x3D;”或是空字符（空格、回车等）。除此之外，还有一些变量是特殊的字符串串，如“$&lt;”、“$@”等，这些是自动化变量，代表不同文件。</p>
+<p>变量的基本赋值：</p>
+<ul>
+<li>简单赋值 ( :&#x3D; ) 编程语言中常规理解的赋值方式，只对当前语句的变量有效。</li>
+<li>递归赋值 ( &#x3D; ) 赋值语句可能影响多个变量，所有目标变量相关的其他变量都受影响。</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x=foo		y=<span class="variable">$(x)</span>b		x=new   <span class="comment">#这种情况下x=new, y=newb，若是简单赋值则y值不变仍为foob</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>条件赋值 ( ?&#x3D; ) 如果变量未定义，则使用符号中的值定义变量。如果该变量已经赋值，则该赋值语句无效。</li>
+<li>追加赋值 ( +&#x3D; ) 原变量用空格隔开的方式追加一个新值。</li>
+</ul>
+<p>自动化变量的表示规则：</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>规则说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$@</td>
+<td>表示规则的<strong>目标文件</strong>名。如果目标是一个文档文件（Linux 中，一般成 .a 文件为文档文件，也成为静态的库文件）， 那么它代表这个文档的文件名。在多目标模式规则中，它代表的是触发规则被执行的文件名。</td>
+</tr>
+<tr>
+<td>$%</td>
+<td>当目标文件是一个静态库文件时，代表<strong>静态库的一个成员名</strong>。</td>
+</tr>
+<tr>
+<td>$&lt;</td>
+<td>规则的<strong>第一个依赖的文件名</strong>。如果是一个目标文件使用隐含的规则来重建，则它代表由隐含规则加入的第一个依赖文件。</td>
+</tr>
+<tr>
+<td>$?</td>
+<td>所有比目标文件更新的依赖文件列表，即<strong>被修改过的文件</strong>，空格分隔。如果目标文件时静态库文件，代表的是库文件（.o 文件）。</td>
+</tr>
+<tr>
+<td>$^</td>
+<td>代表的是<strong>所有依赖文件列表</strong>，使用空格分隔。如果目标是静态库文件，它所代表的只能是所有的库成员（.o 文件）名。 一个文件可重复的出现在目标的依赖中，变量“$^”只记录它的第一次引用的情况。就是说变量“$^”会去掉重复的依赖文件。</td>
+</tr>
+<tr>
+<td>$+</td>
+<td>类似“$^”，但是它<strong>保留了依赖文件中重复出现的文件</strong>。主要用在程序链接时库的交叉引用场合。</td>
+</tr>
+</tbody></table>
+<p>除了变量和通配符，Makefile文件还支持函数的定义与使用。函数的语法类似于变量，也是以“$”来标识的，其格式为$(<function> <arguments> )，下面以字符串处理函数（subst）为例：</arguments></function></p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#$(subst &lt;from&gt;,&lt;to&gt;,&lt;text&gt; )</span></span><br><span class="line">	<span class="comment">#名称：字符串替换函数——subst。</span></span><br><span class="line">	<span class="comment">#功能：把字串&lt;text&gt;中的&lt;from&gt;字符串替换成&lt;to&gt;。</span></span><br><span class="line">	<span class="comment">#返回：函数返回被替换过后的字符串。</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$(<span class="built_in">subst</span> ee,EE,feet on the street)</span>,</span><br><span class="line"></span><br><span class="line"><span class="comment">#返回结果是“fEEt on the strEEt</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-文件操作和目录操作相关："><a href="#3-文件操作和目录操作相关：" class="headerlink" title="3.文件操作和目录操作相关："></a>3.文件操作和目录操作相关：</h3><p><strong>open函数：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;sys/types.h&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;sys/stat.h&gt;</span>	</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="comment">//打开一个已经存在的文件</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> flags)</span></span>;</span><br><span class="line">	<span class="comment">//- pathname：要打开的文件路径</span></span><br><span class="line">	<span class="comment">//- flags：对文件的操作权限设置还有其他的设置</span></span><br><span class="line">	<span class="comment">//O_RDONLY,  O_WRONLY,  O_RDWR  这三个设置是互斥的</span></span><br><span class="line">	<span class="comment">//O_APPEND 每次写时都加到文件的尾端</span></span><br><span class="line">	<span class="comment">//O_CREAT  若文件不存在则创建它,同时说说明mode字段,写明该文件的权限</span></span><br><span class="line">	<span class="comment">//返回值：返回一个新的文件描述符，如果调用失败，返回-1</span></span><br><span class="line"><span class="comment">//创建一个新的文件</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> flags, <span class="type">mode_t</span> mode)</span></span>;</span><br><span class="line">	<span class="comment">//flags中要有O_CREAT，若文件不存在，则创建一个新文件</span></span><br><span class="line">	<span class="comment">//参数mode通常会和umask掩码做与运算，用来控制创建文件的权限</span></span><br><span class="line">	<span class="comment">//mask设置了用户创建文件的默认权限和mode做与运算是为了防止赋予文件不应该有的权限</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>读写函数（默认阻塞）：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">ssize_t</span> <span class="title">read</span><span class="params">(<span class="type">int</span> fd, <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span></span>;</span><br><span class="line">    <span class="comment">//- fd：文件描述符，open得到的，通过这个文件描述符操作某个文件</span></span><br><span class="line">    <span class="comment">//- buf：需要读取数据存放的地方，数组的地址（传出参数）</span></span><br><span class="line">    <span class="comment">//- count：指定的数组的大小</span></span><br><span class="line">    <span class="comment">//返回值：- 成功：&gt;0: 返回实际的读取到的字节数 或者 =0：文件已经读取完了</span></span><br><span class="line">		  <span class="comment">//- 失败：-1 ，并且设置errno</span></span><br><span class="line">		  <span class="comment">// errno = EAGAIN 当应用程序在socket中设置O_NONBLOCK属性后，</span></span><br><span class="line">		  <span class="comment">// 如果数据已经读完，read就会返回-1，并设置EAGAIN</span></span><br><span class="line">		  <span class="comment">// errno = EINTR 被信号中断后不在阻塞，而是返回-1</span></span><br><span class="line"><span class="comment">//write函数同read函数参数相同，实际操作相反。</span></span><br><span class="line"><span class="function"><span class="type">ssize_t</span> <span class="title">write</span><span class="params">(<span class="type">int</span> fd, <span class="type">const</span> <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>读写函数可以通过设置读写对象的属性（open设备时指定了O_NONBLOCK标志）来实现非阻塞（轮询方式），非阻塞I&#x2F;O有一个缺点，如果所有设备都一直没有数据到达，调用者需要反复查询做无用功，如果阻塞在那里，操作系统可以调度别的进程执行。</p>
+<p><strong>文件指针偏移函数：Lseek</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span>	</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">off_t</span> <span class="title">lseek</span><span class="params">(<span class="type">int</span> fd, <span class="type">off_t</span> offset, <span class="type">int</span> whence)</span></span>;</span><br><span class="line">	<span class="comment">//- offset：偏移量</span></span><br><span class="line">	<span class="comment">//- whence:有三个宏定义，分别是</span></span><br><span class="line">		<span class="comment">//SEEK_SET——设置文件指针的偏移量</span></span><br><span class="line">    	<span class="comment">//SEEK_CUR——设置偏移量：当前位置 + 第二个参数offset的值</span></span><br><span class="line">    	<span class="comment">//SEEK_END——设置偏移量：文件大小 + 第二个参数offset的值</span></span><br><span class="line">    <span class="comment">//返回值：返回文件指针的位置</span></span><br><span class="line"><span class="comment">//应用举例：</span></span><br><span class="line"><span class="comment">//1.移动文件指针到文件头</span></span><br><span class="line"><span class="built_in">lseek</span>(fd, <span class="number">0</span>, SEEK_SET);</span><br><span class="line"><span class="comment">//2.获取当前文件指针的位置</span></span><br><span class="line"><span class="built_in">lseek</span>(fd, <span class="number">0</span>, SEEK_CUR);</span><br><span class="line"><span class="comment">//3.获取文件长度</span></span><br><span class="line"><span class="built_in">lseek</span>(fd, <span class="number">0</span>, SEEK_END);</span><br><span class="line"><span class="comment">//4.拓展文件的长度，当前文件10b, 110b, 增加了100个字节</span></span><br><span class="line"><span class="built_in">lseek</span>(fd, <span class="number">100</span>, SEEK_END)</span><br></pre></td></tr></table></figure>
+
+<p><strong>文件属性操作函数：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">access</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> mode)</span></span>;</span><br><span class="line"><span class="comment">//作用：判断某个文件是否有某个权限，或者判断文件是否存在</span></span><br><span class="line">	<span class="comment">//- pathname: 文件路径</span></span><br><span class="line">    <span class="comment">//- mode:</span></span><br><span class="line">		<span class="comment">//R_OK: 判断是否有读权限  W_OK: 判断是否有写权限</span></span><br><span class="line">        <span class="comment">//X_OK: 判断是否有执行权限  F_OK: 判断文件是否存在</span></span><br><span class="line">    <span class="comment">//返回值：成功返回0， 失败返回-1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//头文件	#include &lt;sys.stat.h&gt;</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">chmod</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">mode_t</span> mode)</span></span>;</span><br><span class="line"><span class="comment">//修改文件的权限 - mode:需要修改的权限值，八进制的数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//头文件	#inclide &lt;unistd.h&gt; 	#include&lt;sys/types.h&gt;</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">truncate</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">off_t</span> length)</span></span>;</span><br><span class="line"><span class="comment">//作用：缩减或者扩展文件的尺寸至指定的大小</span></span><br><span class="line">	<span class="comment">//- path: 需要修改的文件的路径</span></span><br><span class="line">	<span class="comment">//- length: 需要最终文件变成的大小</span></span><br><span class="line">    <span class="comment">//成功返回0， 失败返回-1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>目录操作相关函数：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建目录</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">mkdir</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">mode_t</span> mode)</span></span>;</span><br><span class="line"><span class="comment">//修改当前工作目录</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">chdir</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path)</span></span>;</span><br><span class="line"><span class="comment">//获取当前工作目录，返回的指向的一块内存，这个数据就是第一个参数</span></span><br><span class="line"><span class="function"><span class="type">char</span> *<span class="title">getcwd</span><span class="params">(<span class="type">char</span> *buf, <span class="type">size_t</span> size)</span></span>;</span><br><span class="line"><span class="comment">//重命名目录</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">rename</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *oldpath, <span class="type">const</span> <span class="type">char</span> *newpath)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>文件描述符相关函数：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dup</span><span class="params">(<span class="type">int</span> oldfd)</span></span>;</span><br><span class="line"><span class="number">7</span><span class="comment">//作用：复制一个新的文件描述符</span></span><br><span class="line">fd=<span class="number">3</span>; <span class="type">int</span> fd1 = <span class="built_in">dup</span>(fd);</span><br><span class="line"><span class="comment">//fd指向的是a.txt, fd1也是指向a.txt</span></span><br><span class="line"><span class="comment">//从空闲的文件描述符表中找一个最小的，作为新的拷贝的文件描述符</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dup2</span><span class="params">(<span class="type">int</span> oldfd, <span class="type">int</span> newfd)</span></span>;</span><br><span class="line"><span class="comment">//作用：重定向文件描述符</span></span><br><span class="line">	<span class="comment">//--oldfd 指向 a.txt, newfd 指向 b.txt</span></span><br><span class="line">    <span class="comment">//调用函数成功后：newfd 和 b.txt 做close, newfd 指向了 a.txt</span></span><br><span class="line">    <span class="comment">//oldfd 必须是一个有效的文件描述符</span></span><br><span class="line">    <span class="comment">//若oldfd和newfd值相同，相当于什么都没有做</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">fcntl</span><span class="params">(<span class="type">int</span> fd, <span class="type">int</span> cmd, ...)</span></span>;</span><br><span class="line"><span class="comment">//作用：复制文件描述符、设置/获取文件的状态标志等</span></span><br><span class="line">	<span class="comment">//fd : 表示需要操作的文件描述符</span></span><br><span class="line">    <span class="comment">//cmd: 表示对文件描述符进行如何操作</span></span><br><span class="line">    	<span class="comment">//- F_DUPFD : 复制文件描述符,复制的是第一个参数fd，得到一个新的文件描述符（返回值）</span></span><br><span class="line">		<span class="comment">//- F_GETFL : 获取指定的文件描述符文件状态flag，和open函数中flag参数相同。</span></span><br><span class="line">		<span class="comment">//- F_SETFL : 设置文件描述符文件状态flag</span></span><br><span class="line">				<span class="comment">//必选项：O_RDONLY, O_WRONLY, O_RDWR 不可以被修改</span></span><br><span class="line">				<span class="comment">//可选项：O_APPEND, O)NONBLOCK</span></span><br><span class="line">				<span class="comment">//O_APPEND 表示追加数据、NONBLOK 设置成非阻塞</span></span><br><span class="line"><span class="comment">//应用举例：修改文件描述符状态为给flag，并加入O_APPEND这个标记</span></span><br><span class="line"><span class="type">int</span> flag = <span class="built_in">fcntl</span>(fd, F_GETFL);</span><br><span class="line">flag |= O_APPEND;   </span><br><span class="line"><span class="type">int</span> ret = <span class="built_in">fcntl</span>(fd, F_SETFL, flag);</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux-c-c/" rel="tag"># Linux c/c++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/05/Linux%20CC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%BA%8C/" rel="next" title="Linux C/C++编程总结二">
+                  Linux C/C++编程总结二 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

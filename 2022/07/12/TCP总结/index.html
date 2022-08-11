@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="TCP总结：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP总结">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="TCP总结：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta property="og:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png">
+<meta property="article:published_time" content="2022-07-12T11:04:52.000Z">
+<meta property="article:modified_time" content="2022-08-09T07:56:01.742Z">
+<meta property="article:author" content="Sun">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/","path":"2022/07/12/TCP总结/","title":"TCP总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>TCP总结 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="TCP总结 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TCP总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-12 19:04:52" itemprop="dateCreated datePublished" datetime="2022-07-12T19:04:52+08:00">2022-07-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-08-09 15:56:01" itemprop="dateModified" datetime="2022-08-09T15:56:01+08:00">2022-08-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础知识</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="TCP总结："><a href="#TCP总结：" class="headerlink" title="TCP总结："></a>TCP总结：</h1><span id="more"></span>
+
+<h2 id="1-TCP通信流程："><a href="#1-TCP通信流程：" class="headerlink" title="1.TCP通信流程："></a>1.TCP通信流程：</h2><p>TCP协议是TCP&#x2F;IP协议族中一个重要的协议。与IP协议相比，更接近于应用层。传输层协议主要有两个：TCP协议和UDP协议。UDP协议在此博客中不再介绍，而将要总结的TCP协议是一种面向连接、字节流的传输协议，支持一对一的可靠传输（通过确认应答和超时重传来实现可靠传输），TCP的通信流程为：</p>
+<p>1.双方首先进行，需要为连接分配必要的内核资源，管理连接状态和数据传输<br>2.双方读写都是通过同一个连接进行的<br>3.完成数据交换后，通信双方应该断开连接以释放系统资源</p>
+<h3 id="（1）三次握手建立连接："><a href="#（1）三次握手建立连接：" class="headerlink" title="（1）三次握手建立连接："></a>（1）三次握手建立连接：</h3><h4 id="过程："><a href="#过程：" class="headerlink" title="过程："></a>过程：</h4><p>首先服务器端应处于监听状态 (Listen) 随时接收连接请求</p>
+<p><strong>第一次</strong>：</p>
+<p>客户端—–&gt;服务器端，请求报文，包括报文的序列号和SYN请求，之后客户端进入SYS_SENT状态等待。</p>
+<p><strong>第二次</strong></p>
+<p>客户端&lt;—–服务器端，应答报文，包括序列号以及SYN和ACK相关信息，序列号的内容为服务器端随机生成的号码，ACK的数值则为客户端请求报文序列号的数值加一，之后服务器端进入SYN_RCVD状态</p>
+<p><strong>第三次</strong></p>
+<p>客户端——&gt;服务器端，应答报文，回应包括ACK信息，确认应答号为之前服务器端序列号加一，之后客户端进入建立连接状态 (ESTABLISHED) ，服务器端接收报文后也进入该状态。不仅如此，这次报文除了应答外还可以携带客户端到服务器端的信息。</p>
+<p><img src="/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt="三次握手"></p>
+<h4 id="三次握手原因："><a href="#三次握手原因：" class="headerlink" title="三次握手原因："></a>三次握手原因：</h4><ol>
+<li><p>三次握⼿可以阻⽌重复历史连接的初始化(主因) ：</p>
+<p>如果采用两次握手，在网络拥堵的情况下，客户端可能因为超时重传发送了两次TCP的连接请求。第二次发送的连接请求处理完毕并释放资源后，第一次发送的连接可能才请求被服务器接收，两次握手的情况下会重新建立已经完成的历史连接。而采用三次握手，客户端可以凭借上下文信息（序列号过期或超时）判断这是否为历史连接，防止建立之前已经完成的重复连接。</p>
+</li>
+<li><p>三次握⼿可以同步双⽅的初始序列号 </p>
+<p>TCP中序列号和确认应答机制保障了传输的可靠性，因此当第⼆次握⼿时服务端向客户端发送请求报⽂时，需要客户端返回确认报⽂才保障双⽅序列号被可靠同步。如果仅有两次握⼿，只保证了客户端序列号的可靠性。</p>
+</li>
+<li><p>三次握⼿可以避免资源浪费：</p>
+<p>没有第三次握⼿，服务器不清楚客户端是否收到了⾃⼰发送的建⽴连接的 ACK 确认信号，所以每收到⼀ 个 SYN 就只能先主动建⽴⼀个连接，造成资源浪费。</p>
+</li>
+</ol>
+<h3 id="（2）四次挥手释放连接："><a href="#（2）四次挥手释放连接：" class="headerlink" title="（2）四次挥手释放连接："></a>（2）四次挥手释放连接：</h3><p><img src="/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="四次挥手"></p>
+<p><strong>前两次挥手：</strong></p>
+<p>客户端—–&gt;服务器端：请求报文，包含序列号和终止连接的FIN信息，客户端进入FIN_WAIT1状态</p>
+<p>客户端&lt;—–服务器端：应答报文，包含序列号和ACK信息，即请求报文的序列号加一，服务器进入CLOSED_WAIT状态，此时客户端不再发送数据但仍可以接收数据，客户端在收到报文后进入FIN_WAIT2状态。</p>
+<p><strong>后两次挥手：</strong></p>
+<p>客户端&lt;—–服务器端：请求报文，包含序列号和终止连接的FIN信息，服务器进入LAST_ACK状态。</p>
+<p>客户端—–&gt;服务器端：应答报文，包含序列号和ACK信息，ACK序号也是请求报文的序列号加一，之后客户端进入TIME_WAIT状态，等待2MSL后再进入CLOSE状态，服务器收到该报文后进入CLOSE状态。</p>
+<p>几种状态的相关解释：</p>
+<p><strong>FIN_WAIT：</strong>FIN_WAIT1等待服务器端回复相应报文，FIN_WAIT2等待服务器发送终止连接的请求报文。</p>
+<p><strong>TIMEWAIT：</strong>2MSL使得原来连接的数据包在⽹络中都⾃然消失。确保客户端返回的ACK报文被服务器端接收（由于超时重传机制），同时也可以确保其他因为延时重新发送的报文完全被丢弃，防止数据错乱的产生。</p>
+<h2 id="2-TCP的可靠传输"><a href="#2-TCP的可靠传输" class="headerlink" title="2.TCP的可靠传输"></a>2.TCP的可靠传输</h2><p>TCP协议可以实现可靠传输，即保障信息在发送方和接收方准确、精确的传输，达到无差错、不丢失、不重复、按序到达的标准。其具体实现原理很多，至少包括以下几点：</p>
+<h4 id="（1）TCP的确认机制："><a href="#（1）TCP的确认机制：" class="headerlink" title="（1）TCP的确认机制："></a>（1）TCP的确认机制：</h4><p>发送方和接受方都应按照数据包的顺序，维护当前相应的序列号，ACK信号，每一个数据的发送都会有对应的确认回复。这样可以确保TCP传输的数据包按序发送和接受，并能确认数据的送达。</p>
+<h4 id="（2）TCP的超时重传："><a href="#（2）TCP的超时重传：" class="headerlink" title="（2）TCP的超时重传："></a>（2）TCP的超时重传：</h4><p>在发送方发送一个报文后，会设置一个超时计时器等待接收方回传的ACK信号。超时后，发送方认为报文已丢失，重新发送数据包。如果重发一定次数后还是收不到ACK信号，将强制终止连接。超时重传可以解决数据因为网络拥塞无法送达的问题，确保每一条数据都可以被接收方接收。</p>
+<h4 id="（3）SACK选择确认字段："><a href="#（3）SACK选择确认字段：" class="headerlink" title="（3）SACK选择确认字段："></a>（3）SACK选择确认字段：</h4><p>TCP收到乱序数据后会将其放到乱序序列中，然后发送重复ACK给对端。对端如果收到多个重复的ACK，认为发生丢包，TCP会重传最后确认的包开始的后续包。这样原先已经正确传输的包，可能会重复发送，降低了TCP性能。为改善这种情况，发展出SACK技术，使用SACK选项可以告知发包方收到了哪些数据，发包方收到这些信息后就会知道哪些数据丢失，然后立即重传丢失的部分。</p>
+<h4 id="（4）流量控制："><a href="#（4）流量控制：" class="headerlink" title="（4）流量控制："></a>（4）流量控制：</h4><p>发送端和接收端各维护一个发送窗口和接受窗口，由接收方的窗口大小控制发送方的发送速度，实现流量控制。</p>
+<p>（当发送端应用进程产生数据很慢、或接收端应用进程处理接收缓冲区数据很慢可能会出现糊涂窗口综合征问题）</p>
+<h4 id="（5）拥塞控制："><a href="#（5）拥塞控制：" class="headerlink" title="（5）拥塞控制："></a>（5）拥塞控制：</h4><ol>
+<li>慢开始：由小到大逐渐增大拥塞窗口数值（指数增长）。</li>
+<li>拥塞避免：拥塞窗口cwnd按线性规律缓慢增长。</li>
+<li>快重传：接收方每收到一个失序报文段后立即发出重复确认。</li>
+<li>快恢复：当发送方连续收到三个重复确认时，把慢开始门限减半，预防网络拥塞。然后把cwnd值设为慢开始门限减半后的值，然后执行拥塞避免算法。</li>
+</ol>
+<h4 id="（6）校验和字段："><a href="#（6）校验和字段：" class="headerlink" title="（6）校验和字段："></a>（6）校验和字段：</h4><p>TCP报文格式中有校验和字段，用于校验数据一致性，如果不一致则丢弃。</p>
+<h2 id="3-TCP的心跳机制："><a href="#3-TCP的心跳机制：" class="headerlink" title="3.TCP的心跳机制："></a>3.TCP的心跳机制：</h2><p>很多应用层协议都有HeartBeat机制，通常是客户端每隔一小段时间向服务器发送一个数据包，通知服务器自己仍然在线，并传输一些可能必要的数据。心跳包像心跳一样每隔固定时间发一次，以此来告诉服务器，这个客户端还活着。事实上这是为了保持长连接，至于这个包的内容，是没有什么特别规定的，不过一般都是很小的包，或者只包含包头的一个空包。</p>
+<p>心跳包一般来说都是在逻辑层发送空的echo包来实现的。下一个定时器，在一定时间间隔下发送一个空包给客户端，然后客户端反馈一个同样的空包回来，服务器如果在一定时间内收不到客户端发送过来的反馈包，那就只有认定说掉线了。其实，要判定掉线，只需要send或者recv一下，如果结果为零，则为掉线。但是，在长连接下，有可能很长一段时间都没有数据往来。理论上说，这个连接是一直保持连接的，但是实际情况中，如果中间节点出现什么故障是难以知道的。更要命的是，有的节点（防火墙）会自动把一定时间之内没有数据交互的连接给断掉。在这个时候，就需要我们的心跳包了，用于维持长连接，保活。</p>
+<p>在TCP的机制里面，本身是存在有心跳包的机制的，也就是<strong>TCP的选项：SO_KEEPALIVE</strong>。系统默认是设置的2小时的心跳频率。但是它检查不到机器断电、网线拔出、防火墙这些断线。而且逻辑层处理断线可能也不是那么好处理。不论是服务端还是客户端，一方开启KeepAlive功能后，就会自动在规定时间内向对方发送心跳包， 而另一方在收到心跳包后就会自动回复，以告诉对方我仍然在线。 因为开启KeepAlive功能需要消耗额外的宽带和流量，所以TCP协议层默认并不开启KeepAlive功能，尽管这微不足道，但在按流量计费的环境下增加了费用，另一方面，KeepAlive设置不合理时可能会 因为短暂的网络波动而断开健康的TCP连接。并且，默认的KeepAlive超时需要7,200，000 MilliSeconds， 即2小时，探测次数为5次。对于很多服务端应用程序来说，2小时的空闲时间太长。因此，我们需要手工开启KeepAlive功能并设置合理的KeepAlive参数。</p>
+<p><strong>心跳检测步骤：</strong><br>  1客户端每隔一个时间间隔发生一个探测包给服务器<br>  2客户端发包时启动一个超时定时器<br>  3服务器端接收到检测包，应该回应一个包<br>  4如果客户机收到服务器的应答包，则说明服务器正常，删除超时定时器<br>  5如果客户端的超时定时器超时，依然没有收到应答包，则说明服务器挂了</p>
+<h2 id="4-TCP的半关闭："><a href="#4-TCP的半关闭：" class="headerlink" title="4.TCP的半关闭："></a>4.TCP的半关闭：</h2><p>当 TCP 链接中 A 向 B 发送 FIN 请求关闭，另一端 B 回应 ACK 之后（A 端进入 FIN_WAIT_2 状态），并没有立即发送 FIN 给 A，A 方处于半连接状态（半开关），此时 A 可以接收 B 发 送的数据，但是 A 已经不能再向 B 发送数据。TCP半关闭的程序实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">shutdown</span><span class="params">(<span class="type">int</span> sockfd, <span class="type">int</span> how)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	-sockfd: 需要关闭的socket的描述符</span></span><br><span class="line"><span class="comment">	-how: 允许为shutdown操作选择以下几种方式:</span></span><br><span class="line"><span class="comment">		SHUT_RD(0)： 关闭sockfd上的读功能，此选项将不允许sockfd进行读操作。</span></span><br><span class="line"><span class="comment">		该套接字不再接收数据，任何当前在套接字接受缓冲区的数据将被无声的丢弃掉。</span></span><br><span class="line"><span class="comment">		SHUT_WR(1): 关闭sockfd的写功能，此选项将不允许sockfd进行写操作。</span></span><br><span class="line"><span class="comment">		进程不能在对此套接字发出写操作。</span></span><br><span class="line"><span class="comment">		SHUT_RDWR(2):关闭sockfd的读写功能，相当于调用shutdown两次</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>P.S.：<strong>close和shutdown的区别</strong>：使用 close 中止一个连接，但它只是减少描述符的引用计数，并不直接关闭连接，只有当描述符的引用 计数为 0 时才关闭连接。shutdown 不考虑描述符的引用计数，直接关闭描述符。</p>
+<p>如果有多个进程共享一个套接字，close 每被调用一次，计数减 1 ，直到计数为 0 时，也就是所用进程都调用了 close，套接字将被释放。 而如果在多进程中一个进程调用了 shutdown(sfd, SHUT_RDWR) 后，其它的进程将无法进行通信。 但如果一个进程 close(sfd) 将不会影响到其它进程。</p>
+<h2 id="5-TCP的粘包和拆包："><a href="#5-TCP的粘包和拆包：" class="headerlink" title="5.TCP的粘包和拆包："></a>5.TCP的粘包和拆包：</h2><p>粘包：在socket通讯过程中，如果通讯的一端一次性连续发送多条数据包，tcp协议会将多个数据包打包成一个tcp报文发送出去，最终接收到的数据包可能多出一部分，这就是所谓的粘包 。</p>
+<p>拆包：通讯的一端发送的数据包超过一次tcp报文所能传输的最大值时，就会将一个数据包拆成多个最大tcp长度的tcp报文分开传输，最终接收到的数据包可能不完整，这就叫做拆包 。</p>
+<p>对于粘包和拆包问题，常见的解决方案有以下几种：</p>
+<ul>
+<li><p>发送端将每个包都封装成固定的长度，比如100字节大小。如果不足100字节可通过补0或空等进行填充到指定长度；</p>
+</li>
+<li><p>发送端在每个包的末尾使用固定的分隔符，例如\r\n。如果发生拆包需等待多个包发送过来之后再找到其中的\r\n进行合并；例如，FTP协议；</p>
+</li>
+<li><p>将消息分为头部和消息体，头部中保存整个消息的长度，只有读取到足够长度的消息之后才算是读到了一个完整的消息。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/08/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/" rel="prev" title="Linux CC++编程总结三">
+                  <i class="fa fa-chevron-left"></i> Linux CC++编程总结三
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/19/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B/" rel="next" title="面向对象和面向过程">
+                  面向对象和面向过程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

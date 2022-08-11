@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="STL的迭代器（Iterators）:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STL学习二">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/20/STL%E5%AD%A6%E4%B9%A0%E4%BA%8C/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="STL的迭代器（Iterators）:">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-20T09:00:27.000Z">
+<meta property="article:modified_time" content="2022-07-22T07:56:42.270Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="STL">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/20/STL%E5%AD%A6%E4%B9%A0%E4%BA%8C/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/20/STL%E5%AD%A6%E4%B9%A0%E4%BA%8C/","path":"2022/07/20/STL学习二/","title":"STL学习二"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>STL学习二 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/20/STL%E5%AD%A6%E4%B9%A0%E4%BA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="STL学习二 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STL学习二
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-20 17:00:27" itemprop="dateCreated datePublished" datetime="2022-07-20T17:00:27+08:00">2022-07-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-07-22 15:56:42" itemprop="dateModified" datetime="2022-07-22T15:56:42+08:00">2022-07-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">语言学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="STL的迭代器（Iterators）"><a href="#STL的迭代器（Iterators）" class="headerlink" title="STL的迭代器（Iterators）:"></a>STL的迭代器（Iterators）:</h1><span id="more"></span>
+
+<h2 id="STL的六大组件之——迭代器（Iterators）："><a href="#STL的六大组件之——迭代器（Iterators）：" class="headerlink" title="STL的六大组件之——迭代器（Iterators）："></a>STL的六大组件之——迭代器（Iterators）：</h2><p>迭代器在STL中是连接容器和算法的关键，它能够用来遍历标准模板库容器中的部分或全部元素，每个迭代器对象代表容器中的确定的地址。</p>
+<p>由此观之，可知迭代器与智能指针类似，也是一种pointer-like class 。因此迭代器均需要重载* 和-&gt;两个符号，不仅如此，由于迭代器涉及到比较和遍历操作，还需要重载++，–，&#x3D;&#x3D;，！&#x3D;等符号。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//简略的例子：</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">x_iterator</span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	T&amp; <span class="keyword">operator</span>*() <span class="type">const</span>&#123; <span class="keyword">return</span> *px;&#125;</span><br><span class="line">	T* <span class="keyword">operator</span>-&gt;() <span class="type">const</span>&#123; <span class="keyword">return</span> px;&#125;</span><br><span class="line">    self &amp;<span class="keyword">operator</span>++() &#123; <span class="comment">/*略*/</span> &#125;</span><br><span class="line">    self <span class="keyword">operator</span>++() &#123; <span class="comment">/*略*/</span> &#125;</span><br><span class="line">    self &amp;<span class="keyword">operator</span>++() &#123; <span class="comment">/*略*/</span> &#125;</span><br><span class="line">    self <span class="keyword">operator</span>--() &#123; <span class="comment">/*略*/</span> &#125;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>==() &#123; <span class="comment">/*略*/</span> &#125;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>!=() &#123; <span class="comment">/*略*/</span> &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	T* px;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="迭代器的相应类型（associated-types）："><a href="#迭代器的相应类型（associated-types）：" class="headerlink" title="迭代器的相应类型（associated types）："></a>迭代器的相应类型（associated types）：</h3><p>当在算法中使用迭代器时，往往需要知道迭代器的相应类型，这些类型往往可以被分为value type，即迭代器所指向对象的类型；difference type，即两个迭代器之间的距离，往往用于计算头尾迭代器的距离（这代表容器的最大容量）；reference type，即上述代码中重载的&amp;符号；pointer type，即上述代码中重载的-&gt;符号；以及下面要提到的iterator_catagoly。</p>
+<p>不过在总结迭代器的5种分类前，先要总结一下关于获取value type时的问题以及相应的解决方法：</p>
+<p>当一个算法传入迭代器参数时，往往需要用到或者返回“迭代器所指对象”的类型，这时候由于模板只能推导参数类型，不能推导返回类型，我们需要先用<strong>typedef</strong>声明内嵌类型，之后再用<strong>typename</strong>这一关键字修饰表示之后的字符串为类型而非变量，从而获取“迭代器所指对象”的类型。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyIter</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">	<span class="keyword">typedef</span> T value_type;<span class="comment">//声明内嵌类型(nest type)</span></span><br><span class="line">	T *ptr;</span><br><span class="line">	<span class="comment">//.....</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span>&lt;truename I&gt;</span><br><span class="line"><span class="keyword">typename</span> I::value_type<span class="comment">//返回类型 </span></span><br><span class="line"><span class="built_in">func</span>(I it)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//实际工作，函数执行完后会返回value_type</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，如果迭代器的类型为原生指针，<strong>typename</strong>则无法修饰，此时返回“迭代器所指对象”的类型则需要我们用到模板的偏特化（Partial Specialization）来实现，即对当类型为原生指针这一情况进行特化：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//iterator_traits的一般化</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> I&gt;</span><br><span class="line"><span class="keyword">struct</span>  <span class="title class_">iterator_traits</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">typedef</span>  <span class="keyword">typename</span> I::value_type  value_type; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//针对 I为原生指针 iterator_traits的特化版本</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span>  <span class="title class_">iterator_traits</span>(T *)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//对于原生指针 value_type 就是T</span></span><br><span class="line">	<span class="keyword">typedef</span> T value_type;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//所以func()函数就可以这样写</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> I&gt;</span><br><span class="line"><span class="keyword">typename</span> iterator_traits&lt;I&gt;::<span class="function">value_type</span></span><br><span class="line"><span class="function"><span class="title">func</span><span class="params">(I it)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//这样不管I是迭代器类型，还是原生指针</span></span><br><span class="line">	<span class="comment">//该函数都能正常工作</span></span><br><span class="line">	<span class="keyword">return</span> *ite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="迭代器的分类："><a href="#迭代器的分类：" class="headerlink" title="迭代器的分类："></a>迭代器的分类：</h3><p>迭代器基本分为五种，输入迭代器（Input Iterator）、输出迭代器（Output Iterator），前向逆向迭代器（Foward Iterator），双向迭代器（Biadirectional Iterator）和随机迭代器（Random Iterator）。</p>
+<p>根据不同算法的要求往往只需要使用上述一种迭代器，如何选择迭代器的类型也成为了算法优化的考量。如果<strong>按照不同的需求定义多个版本</strong>，在对外接口中判断调用哪个版本，这样只有在运行期间才确定执行哪个版本，影响效率。我们可以通过<strong>实现重载机制</strong>需要提供额外的参数来区分不同函数，然后再在对外接口内确定该额外参数的类型解决这一问题。下面以advance() 函数为例进行对比介绍：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//针对input iterator</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator,<span class="keyword">typename</span> Distance&gt;</span><br><span class="line"><span class="type">void</span> _addvance_II(InputIterator &amp; i,Distance n)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(n--)++i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//针对 bidirectional  iterator</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Bidirectional,<span class="keyword">typename</span> Distance&gt;</span><br><span class="line"><span class="type">void</span> _addvance_IB(Bidirectional &amp; b,Distance n)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(n&gt;=<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">while</span>(n--)++b;</span><br><span class="line">	<span class="keyword">else</span>	</span><br><span class="line">		<span class="keyword">while</span>(n++)--b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//针对Random  Access Iterator</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> RandomAccessIterator,<span class="keyword">typename</span> Distance&gt;</span><br><span class="line"><span class="type">void</span> _addvance_RAI(RandomAccessIterator &amp; r,Distance n)</span><br><span class="line">&#123;</span><br><span class="line">	r+=n;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//对外接口</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator,<span class="keyword">typename</span> Distance&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">advance</span><span class="params">(InputIterator i,Distance n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//在这里判断i到底是哪种类型的迭代器</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="built_in">is_input_iterator</span>(i))</span><br><span class="line">		_addvance_II(i,n);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">is_bidirectional_iterator</span>(i))</span><br><span class="line">		_addvance_IB(i,n);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		_addvance_RAI(i,n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//重载版本：五个作为标记的类型</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">input_iterator_tag</span>&#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">output_iterator_tag</span>&#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">forward_iterator_tag</span>:<span class="keyword">public</span> input_iterator_tag&#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">bidirectional_iterator</span>:<span class="keyword">public</span> forward_iterator_tag&#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">random_access_iterator_tag</span>:<span class="keyword">public</span> bidirectional_iterator&#123;&#125;;</span><br><span class="line"><span class="comment">//针对input iterator</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator,<span class="keyword">typename</span> Distance&gt;</span><br><span class="line"><span class="type">void</span> _addvance(InputIterator &amp; i,Distance n,input_iterator_tag)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span>(n--)++i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//forward iterator版本不用定义，因为它的实现与 input iterator版本完全一样</span></span><br><span class="line"><span class="comment">//上面的五个类型标记的继承关系使得 当传进来的迭代器类型是forward iterator时</span></span><br><span class="line"><span class="comment">//由于没有定义该版本的_advance，所以会调用基类input iterator版本的_advance.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//针对 bidirectional  iterator</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Bidirectional,<span class="keyword">typename</span> Distance&gt;</span><br><span class="line"><span class="type">void</span> _addvance(Bidirectional &amp; b,Distance n,bidirectional_iterator)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(n&gt;=<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">while</span>(n--)++b;</span><br><span class="line">	<span class="keyword">else</span>	</span><br><span class="line">		<span class="keyword">while</span>(n++)--b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//针对Random  Access Iterator</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> RandomAccessIterator,<span class="keyword">typename</span> Distance&gt;</span><br><span class="line"><span class="type">void</span> _addvance(RandomAccessIterator &amp; r,Distance n,random_access_iterator_tag)</span><br><span class="line">&#123;</span><br><span class="line">	r+=n;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//对外接口</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator,<span class="keyword">typename</span> Distance&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">advance</span><span class="params">(InputIterator i,Distance n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//这里利用iterator_traits判断调用哪个版本的_advance</span></span><br><span class="line">	_addvance(i,n,iterator_traits&lt;InputIterator&gt;::<span class="built_in">iterator_category</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="关于容器、迭代器和算法关系的总结："><a href="#关于容器、迭代器和算法关系的总结：" class="headerlink" title="关于容器、迭代器和算法关系的总结："></a><strong>关于容器、迭代器和算法关系的总结</strong>：</h3><p>设计适当的相应型别(associatedtypes) , 是迭代器的责任。而由于设计迭代器往往会暴露容器的过多属性和方法，因此设计适当的迭代器成为了容器的责任。唯容器本身，才知道该设计出怎样的迭代器来遍历自己，并执行迭代器该有的各种行为（前进、后退、取值、取用成员等操作 )。至于算法则完全可以独立于容器和迭代器之外自行发展，只要设计时以迭代器为对外接口即可。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/STL/" rel="tag"># STL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/19/STL%E5%AD%A6%E4%B9%A0%E4%B8%80/" rel="prev" title="STL学习一">
+                  <i class="fa fa-chevron-left"></i> STL学习一
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/22/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" rel="next" title="C++智能指针">
+                  C++智能指针 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

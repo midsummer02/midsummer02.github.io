@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="线程：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux CC++编程总结三">
+<meta property="og:url" content="https://midsummer02.github.io/2022/07/08/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="线程：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-08T09:41:09.000Z">
+<meta property="article:modified_time" content="2022-07-21T08:23:39.303Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="Linux cc++">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/07/08/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/07/08/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/","path":"2022/07/08/LinuxCC++编程总结三/","title":"Linux CC++编程总结三"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux CC++编程总结三 | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/07/08/LinuxCC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%B8%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux CC++编程总结三 | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux CC++编程总结三
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-08 17:41:09" itemprop="dateCreated datePublished" datetime="2022-07-08T17:41:09+08:00">2022-07-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-07-21 16:23:39" itemprop="dateModified" datetime="2022-07-21T16:23:39+08:00">2022-07-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Linux学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础知识</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="线程："><a href="#线程：" class="headerlink" title="线程："></a>线程：</h2><span id="more"></span>
+
+<h3 id="1-进程的创建与回收"><a href="#1-进程的创建与回收" class="headerlink" title="1.进程的创建与回收"></a>1.进程的创建与回收</h3><p><strong>线程创建</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">-thread 线程标识符地址</span></span><br><span class="line"><span class="comment">-attr 线程属性结构体地址，通常设置为 NULL</span></span><br><span class="line"><span class="comment">-start_routine 线程函数的⼊⼝地址</span></span><br><span class="line"><span class="comment">-arg 传给线程函数的参数</span></span><br><span class="line"><span class="comment">返回值 成功: 0; 失败: ⾮0</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_create</span><span class="params">(<span class="type">pthread_t</span> *thread,</span></span></span><br><span class="line"><span class="params"><span class="function"> <span class="type">const</span> <span class="type">pthread_attr_t</span> *attr,</span></span></span><br><span class="line"><span class="params"><span class="function"> <span class="type">void</span> *(*start_routine)(<span class="type">void</span> *),</span></span></span><br><span class="line"><span class="params"><span class="function"> <span class="type">void</span> *arg )</span></span>;</span><br><span class="line"><span class="comment">// 由于pthread_create的错误码不保存在errno中，</span></span><br><span class="line"><span class="comment">// 因此不能直接⽤perror()打印错误信息，</span></span><br><span class="line"><span class="comment">// 可以先⽤strerror()把错误码转换成错误信息再打印。</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>线程回收</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">等待线程结束（阻塞），并回收线程资源，类似进程的 wait() 函数。如果线程已经结束，那么该函数会⽴即返回</span></span><br><span class="line"><span class="comment">-thread 被等待的线程号</span></span><br><span class="line"><span class="comment">-retval ⽤来存储线程退出状态的指针的地址</span></span><br><span class="line"><span class="comment">	-如果thread线程通过return返回，retval所指向的单元⾥存放的是thread线程函数的返回值。 </span></span><br><span class="line"><span class="comment">	-如果thread线程被别的线程调⽤pthread_cancel异常终⽌，指向单元⾥存放常数PTHREAD_CANCELED</span></span><br><span class="line"><span class="comment">	-如果thread线程是⾃⼰调⽤pthread_exit终⽌的，指向的单元存放的是传给pthread_exit的参数。 </span></span><br><span class="line"><span class="comment">返回值 成功: 0; 失败: ⾮0</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_join</span><span class="params">(<span class="type">pthread_t</span> thread, <span class="type">void</span> **retval)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线程分离</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">使调⽤线程与当前进程分离，分离后不代表此线程不依赖与当前进程，</span></span><br><span class="line"><span class="comment">线程分离的⽬的是将线程资源的回收⼯作交由系统⾃动来完成，</span></span><br><span class="line"><span class="comment">也就是说当被分离的线程结束之后，系统会⾃动回收它的资源。所以，此函数不会阻塞。</span></span><br><span class="line"><span class="comment">-thread 线程号.</span></span><br><span class="line"><span class="comment">返回值 成功: 0; 失败: ⾮0.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_detach</span><span class="params">(<span class="type">pthread_t</span> thread)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>join和detach的总结</strong>：<br>线程终⽌后，其终⽌状态⼀直保留到其它线程调⽤pthread_join获取它的状态为⽌。但是线程也可以被置为<br>detach状态，这样的线程⼀旦终⽌就⽴刻回收它占⽤的所有资源，⽽不保留终⽌状态。<br>不能对⼀个已经处于detach状态的线程调⽤pthread_join，这样的调⽤将返回EINVAL错误。也就是说，如果<br>已经对⼀个线程调⽤了pthread_detach就不能再调⽤pthread_join了。</p>
+<p><strong>线程退出</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//退出调⽤线程。⼀个进程中的多个线程是共享该进程的数据段，因此，通常线程退出后所占⽤的资源并不会释放.</span></span><br><span class="line"><span class="comment">//-retval 存储线程退出状态的指针.</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pthread_exit</span><span class="params">(<span class="type">void</span> *retval)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线程取消</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">杀死(取消)线程，线程的取消并不是实时的，⽽⼜⼀定的延时。需要等待线程到达某个取消点(检查点)</span></span><br><span class="line"><span class="comment">-thread ⽬标线程ID</span></span><br><span class="line"><span class="comment">返回值 成功: 0; 失败: 出错编号</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cancel</span><span class="params">(<span class="type">pthread_t</span> thread)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>获取线程号和线程比较</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取线程号函数</span></span><br><span class="line"><span class="function"><span class="type">pthread_t</span> <span class="title">pthread_self</span><span class="params">(<span class="type">void</span>)</span></span>;</span><br><span class="line"><span class="comment">//判断线程号 t1 和 t2 是否相等。返回值，相等: ⾮0; 不相等: 0</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_equal</span><span class="params">(<span class="type">pthread_t</span> t1, <span class="type">pthread_t</span> t2)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线程属性操作函数</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//线程属性类型 pthread_attr_t</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">       <span class="type">int</span>                       detachstate;   <span class="comment">// 线程的分离状态</span></span><br><span class="line">       <span class="type">int</span>                       schedpolicy;   <span class="comment">// 线程调度策略</span></span><br><span class="line">       structsched_param         schedparam;    <span class="comment">// 线程的调度参数</span></span><br><span class="line">       <span class="type">int</span>                       inheritsched;  <span class="comment">// 线程的继承性</span></span><br><span class="line">       <span class="type">int</span>                       scope;         <span class="comment">// 线程的作用域</span></span><br><span class="line">       <span class="type">size_t</span>                    guardsize;     <span class="comment">// 线程栈末尾的警戒缓冲区大小</span></span><br><span class="line">       <span class="type">int</span>                       stackaddr_set; <span class="comment">// 线程的栈设置</span></span><br><span class="line">       <span class="type">void</span>*                     stackaddr;     <span class="comment">// 线程栈的位置</span></span><br><span class="line">       <span class="type">size_t</span>                    stacksize;     <span class="comment">// 线程栈的大小</span></span><br><span class="line">&#125; <span class="type">pthread_attr_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始化线程属性函数，注意：应先初始化线程属性，再pthread_create创建线程</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_attr_init</span><span class="params">(<span class="type">pthread_attr_t</span> *attr)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//销毁线程属性所占⽤的资源函数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_attr_destroy</span><span class="params">(<span class="type">pthread_attr_t</span> *attr)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">获取或者设置线程的栈地址.</span></span><br><span class="line"><span class="comment">-attr 指向⼀个线程属性的指针.</span></span><br><span class="line"><span class="comment">-stackaddr 内存⾸地址.</span></span><br><span class="line"><span class="comment">-stacksize 返回线程的堆栈⼤⼩.</span></span><br><span class="line"><span class="comment">返回值 成功: 0; 失败: 错误号.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_attr_setdetachstate</span><span class="params">(<span class="type">pthread_attr_t</span> *attr, <span class="type">int</span> detachstate)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_attr_getdetachstate</span><span class="params">(<span class="type">const</span> <span class="type">pthread_attr_t</span> *attr, <span class="type">int</span> *detachstate)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取或设置线程的栈⼤⼩</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_attr_getstacksize</span><span class="params">(<span class="type">const</span> <span class="type">pthread_attr_t</span> *attr, <span class="type">size_t</span> *stacksize)</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_attr_setstacksize</span><span class="params">(<span class="type">pthread_attr_t</span> *attr, <span class="type">size_t</span> stacksize)</span></span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-线程同步"><a href="#2-线程同步" class="headerlink" title="2.线程同步"></a>2.线程同步</h3><h5 id="（1）互斥量："><a href="#（1）互斥量：" class="headerlink" title="（1）互斥量："></a>（1）互斥量：</h5><p>互斥锁是⼀种简单的加锁的⽅法来控制对共享资源的访问：在访问共享资源后临界区域前，对互斥锁进⾏加锁，   在访问完成后释放互斥锁导上的锁。  </p>
+<p>对互斥锁进⾏加锁后，任何其他试图再次对互斥锁加锁的线程将会被阻塞，直到锁被释放。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//互斥量的类型 pthread_mutex_t</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">-初始化⼀个互斥锁</span></span><br><span class="line"><span class="comment">-mutex 互斥锁地址。类型是 pthread_mutex_t</span></span><br><span class="line"><span class="comment">-attr 设置互斥ᰁ的属性，通常可采⽤默认属性，即可将 attr 设为 NULL</span></span><br><span class="line"><span class="comment">返回值 成功: 0 成功申请的锁默认是打开的; 失败: ⾮0(错误码)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_mutex_init</span><span class="params">(<span class="type">pthread_mutex_t</span> *restrict mutex, <span class="type">const</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="type">pthread_mutexattr_t</span> *restrict attr)</span></span>;</span><br><span class="line"><span class="comment">// 这种⽅法等价于使⽤ NULL 指定的 attr 参数调⽤ pthread_mutex_init() 来完成动态初始化，</span></span><br><span class="line"><span class="comment">// 不同之处在于 PTHREAD_MUTEX_INITIALIZER 宏不进⾏错误检查。</span></span><br><span class="line"><span class="comment">//注意，restrict关键字修饰后，不允许其他指针操作其指向的数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//销毁指定的⼀个互斥锁。互斥锁在使⽤完毕后，必须要对互斥锁进⾏销毁，以释放资源，参数同上</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_mutex_destroy</span><span class="params">(<span class="type">pthread_mutex_t</span> *mutex)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//对互斥锁上锁，若互斥锁已经上锁，则调⽤者阻塞，直到互斥锁解锁后再上锁</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_mutex_lock</span><span class="params">(<span class="type">pthread_mutex_t</span> *mutex)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//调⽤该函数时，若互斥锁未加锁，则上锁，返回 0;若互斥锁已加锁，则函数直接返回失败，即 EBUSY</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_mutex_trylock</span><span class="params">(<span class="type">pthread_mutex_t</span> *mutex)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对指定的互斥锁解锁</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_mutex_unlock</span><span class="params">(<span class="type">pthread_mutex_t</span> *mutex)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h5 id="（2）读写锁："><a href="#（2）读写锁：" class="headerlink" title="（2）读写锁："></a>（2）读写锁：</h5><p>如果有其它线程读数据，则允许其它线程执⾏读操作，但不允许写操作 。</p>
+<p>如果有其它线程写数据，则其它线程都不允许读、写操作。</p>
+<p>如果某线程申请了读锁，其它线程可以再申请读锁，但不能申请写锁。  </p>
+<p>如果某线程申请了写锁，其它线程不能申请读锁，也不能申请写锁。 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读写锁的类型 pthread_rwlock_t</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">初始化读写锁</span></span><br><span class="line"><span class="comment">-rwlock 指向要初始化的读写锁指针</span></span><br><span class="line"><span class="comment">-attr：读写锁的属性指针。如果 attr 为 NULL 则会使⽤默认的属性初始化读写锁，否则使⽤指定的</span></span><br><span class="line"><span class="comment">attr 初始化读写锁.</span></span><br><span class="line"><span class="comment">可以使⽤宏 PTHREAD_RWLOCK_INITIALIZER 静态初始化读写锁，⽐如:</span></span><br><span class="line"><span class="comment">pthread_rwlock_t my_rwlock = PTHREAD_RWLOCK_INITIALIZER;</span></span><br><span class="line"><span class="comment">这种⽅法等价于使⽤ NULL 指定的 attr 参数调⽤ pthread_rwlock_init() 来完成动态初始化，</span></span><br><span class="line"><span class="comment">不同之处在于PTHREAD_RWLOCK_INITIALIZER 宏不进⾏错误检查.</span></span><br><span class="line"><span class="comment">返回值 成功: 0，读写锁的状态将成为已初始化和已解锁; 失败: ⾮ 0 错误码.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_rwlock_init</span><span class="params">(<span class="type">pthread_rwlock_t</span> *restrict rwlock, <span class="type">const</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="type">pthread_rwlockattr_t</span> *restrict attr)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//⽤于销毁⼀个读写锁，并释放所有相关联的资源，即 pthread_rwlock_init() ⾃动申请的资源</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_rwlock_destroy</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//以阻塞⽅式在读写锁上获取读锁</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_rwlock_rdlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//⽤于尝试以⾮阻塞的⽅式来在读写锁上获取读锁</span></span><br><span class="line"><span class="comment">//如果有任何的写者持有该锁或有写者阻塞在该读写锁上，则⽴即失败返回</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_rwlock_tryrdlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//在读写锁上获取写锁（写锁定），如果没有写者持有该锁，并且没有写者读者持有该锁，则调⽤线程会获取写锁</span></span><br><span class="line"><span class="comment">//如果调⽤线程未获取写锁，则它将阻塞直到它获取了该锁</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_rwlock_wrlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//⽤于尝试以⾮阻塞的⽅式来在读写锁上获取写锁，如果有任何的读者或写者持有该锁，则⽴即失败返回</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_rwlock_trywrlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//⽆论是读锁或写锁，都可以通过此函数解锁</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_rwlock_unlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h5 id="（3）条件变量："><a href="#（3）条件变量：" class="headerlink" title="（3）条件变量："></a>（3）条件变量：</h5><p>条件变量⽤来⾃动阻塞⼀个线程，直到某特殊情况发⽣为⽌。通常条件变ᰁ和互斥锁同时使⽤。</p>
+<p>信号量工作的两个步骤：1.条件不满, 阻塞线程 2. 当条件满⾜, 通知阻塞的线程开始⼯作</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//条件变量的类型 pthread_cond_t</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">初始化⼀个条件变量</span></span><br><span class="line"><span class="comment">-cond 指向要初始化的条件变ᰁ指针.</span></span><br><span class="line"><span class="comment">-attr 条件变ᰁ属性，通常为默认值，传NULL即可.</span></span><br><span class="line"><span class="comment">也可以使⽤静态初始化的⽅法，初始化条件变量;pthread_cond_t cond = PTHREAD_COND_INITIALIZER.</span></span><br><span class="line"><span class="comment">返回值 成功: 0; 失败: ⾮0错误号.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_init</span><span class="params">(<span class="type">pthread_cond_t</span> *restrict cond, </span></span></span><br><span class="line"><span class="params"><span class="function"><span class="type">const</span> <span class="type">pthread_condattr_t</span> *restrict attr)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//销毁⼀个条件变量</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_destroy</span><span class="params">(<span class="type">pthread_cond_t</span> *cond)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//唤醒⾄少⼀个阻塞在条件变量上的线程</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_signal</span><span class="params">(<span class="type">pthread_cond_t</span> *cond)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//唤醒全部阻塞在条件变ᰁ上的线程</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_broadcast</span><span class="params">(<span class="type">pthread_cond_t</span> *cond)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>条件变量阻塞进程</strong>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">阻塞等待⼀个条件变量</span></span><br><span class="line"><span class="comment">1. 阻塞等待条件变量cond（参1）满⾜</span></span><br><span class="line"><span class="comment">2. 释放已掌握的互斥锁（解锁互斥ᰁ）相当于pthread_mutex_unlock(&amp;mutex);</span></span><br><span class="line"><span class="comment">* ((1), (2)两步为⼀个原⼦操作)</span></span><br><span class="line"><span class="comment">3. 当被唤醒，pthread_cond_wait函数返回时，解除阻塞并᯿新申请获取互斥锁</span></span><br><span class="line"><span class="comment">pthread_mutex_lock(&amp;mutex);</span></span><br><span class="line"><span class="comment">-cond 指向要初始化的条件变ᰁ指针.</span></span><br><span class="line"><span class="comment">-mutex 互斥锁.</span></span><br><span class="line"><span class="comment">返回值 成功: 0; 失败: ⾮0错误号.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_wait</span><span class="params">(<span class="type">pthread_cond_t</span> *restrict cond,</span></span></span><br><span class="line"><span class="params"><span class="function"> <span class="type">pthread_mutex_t</span> *restrict mutex)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//限时等待</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pthread_cond_timedwait</span><span class="params">(<span class="type">pthread_cond_t</span> *restrict cond,</span></span></span><br><span class="line"><span class="params"><span class="function"> <span class="type">pthread_mutex_t</span> *restrict mutex,</span></span></span><br><span class="line"><span class="params"><span class="function"> <span class="type">const</span> <span class="keyword">struct</span> *restrict abstime)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">timespec</span> &#123;</span><br><span class="line"> <span class="type">time_t</span> tv_sec; <span class="comment">/* seconds */</span> <span class="comment">// 秒</span></span><br><span class="line"> <span class="type">long</span> tv_nsec; <span class="comment">/* nanosecondes*/</span> <span class="comment">// 纳秒</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="（4）信号量："><a href="#（4）信号量：" class="headerlink" title="（4）信号量："></a>（4）信号量：</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//信号量的类型 sem_t</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建⼀个信号ᰁ并初始化它的值。⼀个⽆名信号ᰁ在被使⽤前必须先初始化</span></span><br><span class="line"><span class="comment">//-sem 信号ᰁ的地址.</span></span><br><span class="line"><span class="comment">//-pshared 等于 0，信号ᰁ在线程间共享（常⽤）; 不等于0，信号ᰁ在进程间共享</span></span><br><span class="line"><span class="comment">//-value 信号量的初始值</span></span><br><span class="line"><span class="comment">//返回值  成功: 0; 失败: -1</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sem_init</span><span class="params">(<span class="type">sem_t</span> *sem, <span class="type">int</span> pshared, <span class="type">unsigned</span> <span class="type">int</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除 sem 标识的信号ᰁ</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sem_destroy</span><span class="params">(<span class="type">sem_t</span> *sem)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//P操作——即判断value是否为0，大于0则value--，否则阻塞直至value&gt;0</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sem_wait</span><span class="params">(<span class="type">sem_t</span> *sem)</span></span>;</span><br><span class="line"><span class="comment">//以⾮阻塞的⽅式来对信号ᰁ进⾏减 1 操作</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sem_trywait</span><span class="params">(<span class="type">sem_t</span> *sem)</span></span>;</span><br><span class="line"><span class="comment">//限时尝试将信号ᰁ的值减 1</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sem_timedwait</span><span class="params">(<span class="type">sem_t</span> *sem, <span class="type">const</span> <span class="keyword">struct</span> timespec *abs_timeout)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//V操作——将信号ᰁ的值加 1 并发出信号唤醒等待线程(sem_wait())</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sem_post</span><span class="params">(<span class="type">sem_t</span> *sem)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取信号量的值，保存在参数 sval 中</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sem_getvalue</span><span class="params">(<span class="type">sem_t</span> *sem, <span class="type">int</span> *sval)</span>；</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux-cc/" rel="tag"># Linux cc++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/05/Linux%20CC++%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93%E4%BA%8C/" rel="prev" title="Linux C/C++编程总结二">
+                  <i class="fa fa-chevron-left"></i> Linux C/C++编程总结二
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/12/TCP%E6%80%BB%E7%BB%93/" rel="next" title="TCP总结">
+                  TCP总结 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
