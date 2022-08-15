@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"midsummer02.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.12.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="NoSql 数据库相比于传统的关系型数据库，在速度、存储量以及多样化结构数据的处理上有了飞跃的技术性提升，更容易实现当下大数据的应用。按照数据存储结构原理的角度，可以将Nosql数据库分为键值存储、文档存储、列族存储、图存储和其他存储五种方式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识NOSQL">
+<meta property="og:url" content="https://midsummer02.github.io/2022/08/14/%E5%88%9D%E8%AF%86NOSQL/index.html">
+<meta property="og:site_name" content="M1DSUMMER&#39;s BLOG">
+<meta property="og:description" content="NoSql 数据库相比于传统的关系型数据库，在速度、存储量以及多样化结构数据的处理上有了飞跃的技术性提升，更容易实现当下大数据的应用。按照数据存储结构原理的角度，可以将Nosql数据库分为键值存储、文档存储、列族存储、图存储和其他存储五种方式。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-14T04:39:28.000Z">
+<meta property="article:modified_time" content="2022-08-14T06:08:46.250Z">
+<meta property="article:author" content="Sun">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://midsummer02.github.io/2022/08/14/%E5%88%9D%E8%AF%86NOSQL/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://midsummer02.github.io/2022/08/14/%E5%88%9D%E8%AF%86NOSQL/","path":"2022/08/14/初识NOSQL/","title":"初识NOSQL"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>初识NOSQL | M1DSUMMER's BLOG</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">M1DSUMMER's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我只是一条咸鱼</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Sun</p>
+  <div class="site-description" itemprop="description">学习记录</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://midsummer02.github.io/2022/08/14/%E5%88%9D%E8%AF%86NOSQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="M1DSUMMER's BLOG">
+      <meta itemprop="description" content="学习记录">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="初识NOSQL | M1DSUMMER's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          初识NOSQL
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-08-14 12:39:28 / 修改时间：14:08:46" itemprop="dateCreated datePublished" datetime="2022-08-14T12:39:28+08:00">2022-08-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>NoSql 数据库相比于传统的关系型数据库，在速度、存储量以及多样化结构数据的处理上有了飞跃的技术性提升，更容易实现当下大数据的应用。按照数据存储结构原理的角度，可以将Nosql数据库分为键值存储、文档存储、列族存储、图存储和其他存储五种方式。</p>
+<span id="more"></span>
+
+<h4 id="Nosql数据库的技术特点："><a href="#Nosql数据库的技术特点：" class="headerlink" title="Nosql数据库的技术特点："></a>Nosql数据库的技术特点：</h4><ol>
+<li>弱存储模式：简化约束要求，取消强制类型检测等，使得数据处理速度大大加快。</li>
+<li>没有同一语言类似于sql来定义和操作数据库，移植性差</li>
+<li>弱事务保证数据的可用性和安全性，或者没有事务处理机制</li>
+<li>多采用多机分布式处理方式</li>
+</ol>
+<h4 id="分布式系统下的存储问题：CAP"><a href="#分布式系统下的存储问题：CAP" class="headerlink" title="分布式系统下的存储问题：CAP"></a>分布式系统下的存储问题：CAP</h4><ol>
+<li>一致性 consistency，同一时间任何客户的任何节点都能读取最新写入数据，核心是至少两台服务器保存一样的数据，即在分布式系统中比较难以实现</li>
+<li>可用性 availability，一个运行的节点在合理时间点总能响应更新请求，不会发生错误和超时。通常情况下和分布式数据冗余，负载均衡等有着很大的关联。</li>
+<li>分区容错性 Partition Tolerance，网络发生故障时仍能继续保持响应客户读请求的能力，其他分区出错并不影响分布式整体的运行。</li>
+</ol>
+<h4 id="Nosql-的-base-特性："><a href="#Nosql-的-base-特性：" class="headerlink" title="Nosql 的 base 特性："></a>Nosql 的 base 特性：</h4><ol>
+<li>基本可用（BA，Basically Available） 运行分布式系统的部分故障，系统其余部分正常继续运作。</li>
+<li>软状态（S，Soft State）允许出现数据状态暂时不一致的情况，但是会有纠错处理。</li>
+<li>最终一致性（E，Eventually Consistent）不一致的数据状态最终的处理结果将是一致的，Nosql对数据的处理过程可以有短暂的时间间隔，也允许分更细的步骤一个个处理，只需最后达到一致性即可。</li>
+</ol>
+<h4 id="键值数据存储模式的NoSql："><a href="#键值数据存储模式的NoSql：" class="headerlink" title="键值数据存储模式的NoSql："></a>键值数据存储模式的NoSql：</h4><p>键值存储模式类似于map，有key和value组成键值对，再由键值对集合组成命名空间，key和value有着一一对应的映射关系，key是索引值，起到确保记录数据唯一性的作用。</p>
+<p>基本数据操作方式包括：put、get和delete三种。</p>
+<p>优点：数据存储结构简单，计算高效、以内存为主，避免通过读写硬盘导致速度降低，数据处理快、分布式处理。</p>
+<p>缺点：多值查找能力弱，需要读取key的内容和范围、没有约束，数据存放易出错、不容易建立复杂关系，例如集合之间的交并补运算。</p>
+<h4 id="键值数据库Redis："><a href="#键值数据库Redis：" class="headerlink" title="键值数据库Redis："></a>键值数据库Redis：</h4><p>Redis在原来键值存储的基础原理上进行了细化分类，构建了具有自身特点的数据结构类型，包括：</p>
+<p>字符串（string，其值二进制安全，可用存放数字、图片、视频等数据）、</p>
+<p>列表（list，值为多个字符串按照插入顺序组成的链表）、</p>
+<p>哈希（hash，一组键值对的集合，key是唯一的）、</p>
+<p>集合（set，类似于列表，但是值无序且不重复）、</p>
+<p>有序集合（sorted set，与hash相同，但是key按照value来排序）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/14/webserver%E7%9A%84%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/" rel="prev" title="webserver的压力测试">
+                  <i class="fa fa-chevron-left"></i> webserver的压力测试
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sun</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

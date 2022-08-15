@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
 <meta property="og:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png">
 <meta property="article:published_time" content="2022-07-12T11:04:52.000Z">
-<meta property="article:modified_time" content="2022-08-09T07:56:01.742Z">
+<meta property="article:modified_time" content="2022-08-13T02:44:36.739Z">
 <meta property="article:author" content="Sun">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://midsummer02.github.io/2022/07/12/TCP%E6%80%BB%E7%BB%93/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
@@ -131,7 +131,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -142,7 +142,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,7 +217,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-08-09 15:56:01" itemprop="dateModified" datetime="2022-08-09T15:56:01+08:00">2022-08-09</time>
+      <time title="修改时间：2022-08-13 10:44:36" itemprop="dateModified" datetime="2022-08-13T10:44:36+08:00">2022-08-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -275,7 +275,10 @@
 <p>客户端—–&gt;服务器端：应答报文，包含序列号和ACK信息，ACK序号也是请求报文的序列号加一，之后客户端进入TIME_WAIT状态，等待2MSL后再进入CLOSE状态，服务器收到该报文后进入CLOSE状态。</p>
 <p>几种状态的相关解释：</p>
 <p><strong>FIN_WAIT：</strong>FIN_WAIT1等待服务器端回复相应报文，FIN_WAIT2等待服务器发送终止连接的请求报文。</p>
-<p><strong>TIMEWAIT：</strong>2MSL使得原来连接的数据包在⽹络中都⾃然消失。确保客户端返回的ACK报文被服务器端接收（由于超时重传机制），同时也可以确保其他因为延时重新发送的报文完全被丢弃，防止数据错乱的产生。</p>
+<p><strong>TIMEWAIT：</strong>2MSL使得原来连接的数据包在⽹络中都⾃然消失。确保客户端返回的ACK报文被服务器端接收（由于超时重传机制），同时也可以确保其他因为延时重新发送的报文完全被丢弃，防止数据错乱的产生，这里的数据错乱指如果没有TIME-WAIT，那么可以立马进行新的连接，而这个新连接中可能接收到历史连接数据导致错乱。</p>
+<h4 id="TCP的RST字段（复位报文段）："><a href="#TCP的RST字段（复位报文段）：" class="headerlink" title="TCP的RST字段（复位报文段）："></a>TCP的RST字段（复位报文段）：</h4><p>通知对方重新建立连接或者关闭连接，例如：</p>
+<p>访问不存在的端口，回应拒绝并设置RST为1 ； 异常终止连接，发送方收到后将所有排队等待队列中的数据丢弃；</p>
+<p>处理半打开连接：一方连接断开后另一方未接收到，此时继续通信，另一方会发送相关服务报文通知。</p>
 <h2 id="2-TCP的可靠传输"><a href="#2-TCP的可靠传输" class="headerlink" title="2.TCP的可靠传输"></a>2.TCP的可靠传输</h2><p>TCP协议可以实现可靠传输，即保障信息在发送方和接收方准确、精确的传输，达到无差错、不丢失、不重复、按序到达的标准。其具体实现原理很多，至少包括以下几点：</p>
 <h4 id="（1）TCP的确认机制："><a href="#（1）TCP的确认机制：" class="headerlink" title="（1）TCP的确认机制："></a>（1）TCP的确认机制：</h4><p>发送方和接受方都应按照数据包的顺序，维护当前相应的序列号，ACK信号，每一个数据的发送都会有对应的确认回复。这样可以确保TCP传输的数据包按序发送和接受，并能确认数据的送达。</p>
 <h4 id="（2）TCP的超时重传："><a href="#（2）TCP的超时重传：" class="headerlink" title="（2）TCP的超时重传："></a>（2）TCP的超时重传：</h4><p>在发送方发送一个报文后，会设置一个超时计时器等待接收方回传的ACK信号。超时后，发送方认为报文已丢失，重新发送数据包。如果重发一定次数后还是收不到ACK信号，将强制终止连接。超时重传可以解决数据因为网络拥塞无法送达的问题，确保每一条数据都可以被接收方接收。</p>
